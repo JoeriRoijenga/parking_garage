@@ -1,8 +1,9 @@
-package Parkeersimulator;
+package nl.hanze.st.parkeersimulator.model;
 
 import java.awt.Color;
+import nl.hanze.st.mvc.Model;
 
-public abstract class Actor {
+public abstract class Actor extends Model {
 	//private Location location;
 
     /**

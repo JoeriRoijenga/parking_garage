@@ -1,6 +1,6 @@
-package Parkeersimulator;
+package nl.hanze.st.parkeersimulator.model;
 
-public abstract class Vehicle {
+public abstract class Vehicle extends Actor {
 	private int minutesLeft;
     private boolean isPaying;
     private boolean hasToPay;
