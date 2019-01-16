@@ -5,7 +5,7 @@ import java.util.*;
 public class QueueCar extends QueueVehicle {
 
 	
-	//private Queue<Car> carqueue;
+
 	private Queue<Car> carqueue;
 	
 

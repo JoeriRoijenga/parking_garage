@@ -8,14 +8,14 @@ public abstract class QueueVehicle {
 	
 	
     protected boolean addVehicle(Vehicle vehicle) {
-        return queue.add(vehicle);
+        return vehicleQueue.add(vehicle);
     }
 
     protected Vehicle removeVehicle() {
-        return queue.poll();
+        return vehicleQueue.poll();
     }
 
     protected int vehiclesInQueue(){
-    	return queue.size();
+    	return vehicleQueue.size();
     }
 }
