@@ -23,5 +23,5 @@ public abstract class Actor extends Model {
     }
 	*/
     
-    public abstract Color getColor();
+    
 }
