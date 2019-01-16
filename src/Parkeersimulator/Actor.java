@@ -1,7 +1,5 @@
 package Parkeersimulator;
 
-import java.awt.Color;
-
 public abstract class Actor {
 	//private Location location;
 
