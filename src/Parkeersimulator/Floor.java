@@ -5,7 +5,7 @@ package Parkeersimulator;
  * 
  * This class is made for the floor located in the parking garage.
  * 
- * @autor Timo de Jong, Joeri Roijenga, Tim Perdok, Niels 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels 
  * @version 0.1 (16-1-2019)
  */
 
