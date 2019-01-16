@@ -1,12 +1,14 @@
-package nl.hanze.st.parkeersimulator.model;
+package nl.hanze.st.parkeersimulator;
 
 import javax.swing.*;
 
 import nl.hanze.st.mvc.Model;
+import nl.hanze.st.parkeersimulator.model.RegularCar;
+import nl.hanze.st.parkeersimulator.model.SubscriptionCar;
 
 public class Thread  {
-	private Model regularCar;
-	private Model subscriptionCar;
+	private Model regularCarModel;
+	private Model subscriptionCarModel;
 	private JFrame screen;
 	
 	/*
@@ -16,8 +18,8 @@ public class Thread  {
 	*/
 	
 	public Thread() {
-		subscriptionCar = new SubscriptionCar();
-		regularCar = new RegularCar();
+		subscriptionCarModel = new SubscriptionCar();
+		regularCarModel = new RegularCar();
 		/*
 		controller=new Controller(model);
 		countview=new CountView(model);
