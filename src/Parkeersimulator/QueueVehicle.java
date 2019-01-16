@@ -3,15 +3,19 @@ import java.util.*;
 
 public abstract class QueueVehicle {
 
-    public boolean addVehicle(Car car) {
-        return queue.add(car);
+	protected Queue<Vehicle> vehicleQueue;
+	
+	
+	
+    protected boolean addVehicle(Vehicle vehicle) {
+        return queue.add(vehicle);
     }
 
-    public Car removeVehicle() {
+    protected Vehicle removeVehicle() {
         return queue.poll();
     }
 
-    public int vehiclesInQueue(){
+    protected int vehiclesInQueue(){
     	return queue.size();
     }
 }
