@@ -1,4 +1,5 @@
-package Parkeersimulator;
+package nl.hanze.st.parkeersimulator.model;
+
 import java.util.*;
 
 public abstract class QueueVehicle {

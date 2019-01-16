@@ -1,12 +1,8 @@
 package nl.hanze.st.parkeersimulator.model;
 
-<<<<<<< HEAD:src/nl/hanze/st/parkeersimulator/model/Vehicle.java
-public abstract class Vehicle extends Actor {
-=======
 import java.awt.Color;
 
-public abstract class Vehicle {
->>>>>>> origin/timo_parking_garage:src/Parkeersimulator/Vehicle.java
+public abstract class Vehicle extends Actor {
 	private int minutesLeft;
     private boolean isPaying;
     private boolean hasToPay;
