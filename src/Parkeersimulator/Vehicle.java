@@ -1,5 +1,7 @@
 package Parkeersimulator;
 
+import java.awt.Color;
+
 public abstract class Vehicle {
 	private int minutesLeft;
     private boolean isPaying;
@@ -36,4 +38,6 @@ public abstract class Vehicle {
     public void tick() {
         minutesLeft--;
     }
+    
+    public abstract Color getColor();
 }

@@ -9,11 +9,11 @@ package Parkeersimulator;
  * @version 0.1 (16-1-2019)
  */
 
-public class Place {
+public class Place extends Row{
 	private int place;
 	
-	public Place(int place) {
-		this.place = place;
+	public Place() {
+		
 	}
 	
 	/**

@@ -22,5 +22,5 @@ public abstract class Actor {
     }
 	*/
     
-    public abstract Color getColor();
+    
 }

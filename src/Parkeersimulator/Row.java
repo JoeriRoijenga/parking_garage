@@ -9,11 +9,11 @@ package Parkeersimulator;
  * @version 0.1 (16-1-2019)
  */
 
-public abstract class Row {
+public abstract class Row extends Floor {
 	private int row;
 	
-	public Row(int row) {
-		this.row = row;
+	public Row() {
+		
 	}
 	
 	/**

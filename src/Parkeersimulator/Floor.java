@@ -9,11 +9,11 @@ package Parkeersimulator;
  * @version 0.1 (16-1-2019)
  */
 
-public abstract class Floor {
+public abstract class Floor extends Actor {
 	private int floor;
 	
-	public Floor(int floor) {
-		this.floor = floor;
+	public Floor() {
+		
 	}
 	
 //	public String getLocation() {
