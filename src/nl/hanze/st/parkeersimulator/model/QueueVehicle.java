@@ -13,7 +13,6 @@ import java.util.*;
  */
 
 public abstract class QueueVehicle {
-	
 	private Queue<Car> queue = new LinkedList<>();
 
 	/**
@@ -22,6 +21,7 @@ public abstract class QueueVehicle {
 	 * @param car
 	 * @return boolean
 	 */
+/*
     public boolean addVehicle(Car car) {
         return queue.add(car);
     }
@@ -43,4 +43,5 @@ public abstract class QueueVehicle {
     public int vehiclesInQueue(){
     	return queue.size();
     }
+    */
 }

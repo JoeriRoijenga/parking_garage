@@ -9,7 +9,7 @@ package nl.hanze.st.parkeersimulator.model;
  * @version 0.1 (16-1-2019)
  */
 
-public abstract class Location extends Actor {
+public class Location {
 	private int floor;
 	private int row;
 	private int place;
