@@ -10,14 +10,14 @@ package nl.hanze.st.parkeersimulator.model;
  */
 
 public abstract class Location extends Actor {
-	private int floor;
-	private int row;
 	private int place;
+	private int row;
+	private int floor;
 	
-	public Location(int floor, int row, int place) {
-		this.floor = floor;
-		this.row = row;
+	public Location(int place, int row, int floor) {
 		this.place = place;
+		this.row = row;
+		this.floor = floor;
 	}
 	
 	/**
@@ -31,12 +31,12 @@ public abstract class Location extends Actor {
 	}
 	
 	/**
-	 * Getter for the floor.
+	 * Getter for the place.
 	 * 
-	 * @return int floor.
+	 * @return int place.
 	 */
-	public int getFloor() {
-		return floor;
+	public int getPlace() {
+		return place;
 	}
 	
 	/**
@@ -49,12 +49,12 @@ public abstract class Location extends Actor {
 	}
 	
 	/**
-	 * Getter for the place.
+	 * Getter for the floor.
 	 * 
-	 * @return int place.
+	 * @return int floor.
 	 */
-	public int getPlace() {
-		return place;
+	public int getFloor() {
+		return floor;
 	}
 
 }
