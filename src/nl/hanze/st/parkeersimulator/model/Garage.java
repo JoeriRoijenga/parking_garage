@@ -209,7 +209,7 @@ public class Garage extends Model {
         addArrivingCars(numberOfCars, SUBSCRIPTION);    	
     }
 
-    private void carsEntering(CarQueue queue){
+    private void carsEntering(CustomerQueue queue){
         int i=0;
         // Remove car from the front of the queue and assign to a parking space.
     	while (queue.carsInQueue()>0 && 
@@ -252,7 +252,7 @@ public class Garage extends Model {
     private void carsLeaving(){
         // Let cars leave.
     	int i=0;
-    	while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
+    	while (exitCarQueue.size()>0 && i < exitSpeed){
             exitCarQueue.removeCar();
             i++;
     	}	
