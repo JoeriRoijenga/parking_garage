@@ -75,7 +75,7 @@ public class Garage extends Model {
     	updateViews();
     	// Pause.
         try {
-            Thread.sleep(1000);
+            Thread.sleep(tickPause);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
