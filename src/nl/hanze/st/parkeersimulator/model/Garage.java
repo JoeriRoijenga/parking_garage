@@ -37,6 +37,11 @@ public class Garage extends Model {
 
     
 	public Garage(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
+		entranceCarQueue = new CustomerQueue();
+        entrancePassQueue = new CustomerQueue();
+        paymentCarQueue = new CustomerQueue();
+        exitCarQueue = new CustomerQueue();
+        
 		this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
@@ -215,9 +220,9 @@ public class Garage extends Model {
     	while (queue.carsInQueue()>0 && 
     			getNumberOfOpenSpots()>0 && 
     			i<enterSpeed) {
-            Car car = queue.removeCar();
+            Vehicle vehicle = queue.removeCar();
             Location freeLocation = getFirstFreeLocation();
-            setCarAt(freeLocation, car);
+            setCarAt(freeLocation, vehicle);
             i++;
         }
     }
@@ -242,9 +247,9 @@ public class Garage extends Model {
         // Let cars pay.
     	int i=0;
     	while (paymentCarQueue.carsInQueue()>0 && i < paymentSpeed){
-            Car car = paymentCarQueue.removeCar();
+            Vehicle vehicle = paymentCarQueue.removeCar();
             // TODO Handle payment.
-            carLeavesSpot(car);
+            carLeavesSpot(vehicle);
             i++;
     	}
     }
@@ -252,7 +257,7 @@ public class Garage extends Model {
     private void carsLeaving(){
         // Let cars leave.
     	int i=0;
-    	while (exitCarQueue.size()>0 && i < exitSpeed){
+    	while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
             exitCarQueue.removeCar();
             i++;
     	}	
@@ -292,4 +297,4 @@ public class Garage extends Model {
     	removeCarAt(vehicle.getLocation());
         exitCarQueue.addCar(vehicle);
     }
-
+}
