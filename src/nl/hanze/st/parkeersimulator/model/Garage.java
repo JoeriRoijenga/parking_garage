@@ -37,6 +37,11 @@ public class Garage extends Model {
 
     
 	public Garage(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
+		entranceCarQueue = new CustomerQueue();
+        entrancePassQueue = new CustomerQueue();
+        paymentCarQueue = new CustomerQueue();
+        exitCarQueue = new CustomerQueue();
+        
 		this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
