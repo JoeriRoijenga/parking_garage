@@ -18,6 +18,7 @@ public abstract class Model {
 	 * Notify views. Called by subclasses (concrete models)
 	 */
 	protected void notifyView() {
+		System.out.println("Update view");
 		for (View view : views) {
 			view.notify(this);
 		}

@@ -1,6 +1,7 @@
 package nl.hanze.st.parkeersimulator.model;
 
 import java.awt.Color;
+import java.util.Random;
 
 public abstract class Vehicle extends Actor {
 	private int minutesLeft;
@@ -8,7 +9,10 @@ public abstract class Vehicle extends Actor {
     private boolean hasToPay;
     
 	public Vehicle() {
-		
+    	Random random = new Random();
+    	int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
+        this.setMinutesLeft(stayMinutes);
+
 	}
 	
     public int getMinutesLeft() {
@@ -38,7 +42,6 @@ public abstract class Vehicle extends Actor {
     public void tick() {
         minutesLeft--;
     }
-   
     
     public abstract Color getColor();
 }

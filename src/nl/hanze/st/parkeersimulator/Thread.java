@@ -23,6 +23,8 @@ public class Thread {
 		window.pack();
 		window.setVisible(true);
 		
-		model.tickThread();
+		while (true) {
+			model.tickThread();
+		}
 	}
 }
