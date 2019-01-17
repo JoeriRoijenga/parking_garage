@@ -14,33 +14,33 @@ import java.util.*;
 
 public abstract class QueueVehicle {
 	
-	private Queue<Car> queue = new LinkedList<>();
-
-	/**
-	 * Adds a Vehicle to the queue.
-	 * 
-	 * @param car
-	 * @return boolean
-	 */
-    public boolean addVehicle(Car car) {
-        return queue.add(car);
-    }
-
-    /**
-     * Removes a Vehicle from the queue
-     * 
-     * @return Car
-     */
-    public Car removeVehicle() {
-        return queue.poll();
-    }
-
-    /**
-     * Return the size of the queue
-     * 
-     * @return integer
-     */
-    public int vehiclesInQueue(){
-    	return queue.size();
-    }
+//	private Queue<Car> queue = new LinkedList<>();
+//
+//	/**
+//	 * Adds a Vehicle to the queue.
+//	 * 
+//	 * @param car
+//	 * @return boolean
+//	 */
+//    public boolean addVehicle(Car car) {
+//        return queue.add(car);
+//    }
+//
+//    /**
+//     * Removes a Vehicle from the queue
+//     * 
+//     * @return Car
+//     */
+//    public Car removeVehicle() {
+//        return queue.poll();
+//    }
+//
+//    /**
+//     * Return the size of the queue
+//     * 
+//     * @return integer
+//     */
+//    public int vehiclesInQueue(){
+//    	return queue.size();
+//    }
 }
