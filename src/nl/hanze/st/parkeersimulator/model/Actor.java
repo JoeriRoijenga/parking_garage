@@ -4,7 +4,7 @@ import java.awt.Color;
 import nl.hanze.st.mvc.Model;
 
 public abstract class Actor extends Model {
-	//private Location location;
+	private Location location;
 
     /**
      * Constructor for objects of class Car
@@ -13,7 +13,6 @@ public abstract class Actor extends Model {
 
     }
 
-    /*
     public Location getLocation() {
         return location;
     }
@@ -21,7 +20,4 @@ public abstract class Actor extends Model {
     public void setLocation(Location location) {
         this.location = location;
     }
-	*/
-    
-    
 }

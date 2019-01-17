@@ -3,7 +3,7 @@ package nl.hanze.st.parkeersimulator.model;
 import java.util.*;
 
 public abstract class QueueVehicle {
-
+/*
     public boolean addVehicle(Car car) {
         return queue.add(car);
     }
@@ -15,4 +15,5 @@ public abstract class QueueVehicle {
     public int vehiclesInQueue(){
     	return queue.size();
     }
+    */
 }

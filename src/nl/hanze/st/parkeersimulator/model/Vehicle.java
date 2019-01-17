@@ -38,6 +38,7 @@ public abstract class Vehicle extends Actor {
     public void tick() {
         minutesLeft--;
     }
+   
     
     public abstract Color getColor();
 }
