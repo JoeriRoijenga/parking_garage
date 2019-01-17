@@ -1,6 +1,7 @@
 package nl.hanze.st.parkeersimulator.view;
 
 import java.awt.*;
+import javax.swing.*;
 
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
@@ -9,8 +10,7 @@ import nl.hanze.st.parkeersimulator.model.Vehicle;
 import nl.hanze.st.mvc.Model;
 
 public class ParkingView extends View {
-
-    private Dimension size;
+	private Dimension size;
     private Image carParkImage;    
     //private Garage garage;
     
@@ -19,7 +19,6 @@ public class ParkingView extends View {
      */
     public ParkingView() {
         size = new Dimension(0, 0);
-        size = getPreferredSize();
     }
 
     /**
@@ -34,7 +33,7 @@ public class ParkingView extends View {
      * internal image to screen.
      */
     public void paintComponent(Graphics g) {
-        if (carParkImage == null) {
+    	if (carParkImage == null) {
             return;
         }
 

@@ -18,11 +18,11 @@ public class Thread {
 
 		parkingView.setController(parkingController);
 		model.addView(parkingView);
-
-		model.start();
 		
 		window.setContentPane(parkingView);
 		window.pack();
 		window.setVisible(true);
+		
+		model.start();
 	}
 }
