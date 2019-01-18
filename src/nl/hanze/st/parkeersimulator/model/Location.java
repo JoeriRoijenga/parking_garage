@@ -1,19 +1,35 @@
 package nl.hanze.st.parkeersimulator.model;
 
 /**
- * Class Floor
+ * Class Location
  * 
  * This class is made for the floor located in the parking garage.
  * 
- * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels. 
- * @version 0.1 (16-1-2019)
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries.
+ * @version 0.1 (18-1-2019)
  */
-
 public class Location {
+	/**
+	 * @param floor This param is used to store the floors of the garage.
+	 */
 	private int floor;
+	
+	/**
+	 * @param row This param is used to store the rows per floor of the garage.
+	 */
 	private int row;
+	
+	/**
+	 * @param place This param is used to store the places per row of the garage.
+	 */
 	private int place;
 	
+	/**
+	 * Constructor
+	 * @param floor This param will contain the amount of floors of the garage.
+	 * @param row This param will contain the amount of rows per floor of the garage.
+	 * @param place	This param will contain the amount of places per row of the garage.
+	 */
 	public Location(int floor, int row, int place) {
 		this.floor = floor;
 		this.row = row;

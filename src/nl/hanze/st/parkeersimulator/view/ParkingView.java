@@ -9,10 +9,24 @@ import nl.hanze.st.parkeersimulator.model.Location;
 import nl.hanze.st.parkeersimulator.model.Vehicle;
 import nl.hanze.st.mvc.Model;
 
+/**
+ * Class ParkingView
+ * 
+ * This class will contain the view of the parking lots.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class ParkingView extends View {
+	/**
+	 * @param size This param will contain the dimension of your screen.
+	 */
 	private Dimension size;
+	
+	/**
+	 * @param carParkImage This param will contain an image of the parking lots.
+	 */
     private Image carParkImage;    
-    //private Garage garage;
     
     /**
      * Constructor for objects of class CarPark
@@ -23,6 +37,8 @@ public class ParkingView extends View {
 
     /**
      * Overridden. Tell the GUI manager how big we would like to be.
+     * 
+     * @return Dimension This return will return a preferred size of the dimension.
      */
     public Dimension getPreferredSize() {
         return new Dimension(800, 500);
@@ -31,6 +47,8 @@ public class ParkingView extends View {
     /**
      * Overriden. The car park view component needs to be redisplayed. Copy the
      * internal image to screen.
+     * 
+     * @param g This param will contain the Graphics of your screen.
      */
     public void paintComponent(Graphics g) {
     	if (carParkImage == null) {
@@ -49,6 +67,10 @@ public class ParkingView extends View {
 
     /**
      * Paint a place on this car park view in a given color.
+     * 
+     * @param graphics This param will contain the graphics that you will use.
+     * @param location This param will contain the location that you will draw.
+     * @param color This param will contain the color of the parking lot.
      */
     private void drawPlace(Graphics graphics, Location location, Color color) {
         graphics.setColor(color);
@@ -59,6 +81,11 @@ public class ParkingView extends View {
                 10 - 1); // TODO use dynamic size or constants
     }
 
+    /**
+     * This method will update your view with new graphics.
+     * 
+     * @param model This param will contain the garage model.
+     */
 	@Override
 	protected void update(Model model) {
 		Garage garage = (Garage) model; // cast
@@ -80,7 +107,5 @@ public class ParkingView extends View {
             }
         }
         repaint();
-	}
-
-	
+	}	
 }

@@ -1,7 +1,17 @@
 package nl.hanze.st.mvc;
 
+/**
+ * Abstract Class Controller
+ * 
+ * This class is the controller class that we will use for every child controller.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public abstract class Controller {
-
+	/**
+	 * @param model This param contains the current model that's used for the controller.
+	 */
 	protected final Model model;
 
 	/**
