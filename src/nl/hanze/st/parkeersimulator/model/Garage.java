@@ -70,16 +70,18 @@ public class Garage extends Model {
     }
 	
     public void tickThread() {
-    	advanceTime();
-    	handleExit();
-    	updateViews();
-    	// Pause.
-        try {
-            Thread.sleep(tickPause);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    	handleEntrance();
+    	while (true) {
+    		advanceTime();    
+	    	handleExit();
+	    	updateViews();
+	    	// Pause.
+	        try {
+	            Thread.sleep(tickPause);
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	    	handleEntrance();
+    	}
     }
     
     private void advanceTime(){
