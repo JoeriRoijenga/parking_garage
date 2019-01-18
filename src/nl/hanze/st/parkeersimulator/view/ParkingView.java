@@ -1,6 +1,6 @@
 package nl.hanze.st.parkeersimulator.view;
 
-import java.awt.*;
+import java.awt.*; 
 import javax.swing.*;
 
 import nl.hanze.st.mvc.View;
