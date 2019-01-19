@@ -8,6 +8,7 @@ import nl.hanze.st.mvc.Model;
 public class Garage extends Model {
 	private static final String REGULAR = "1";
 	private static final String SUBSCRIPTION = "2";
+	private static final String RESERVATION = "3";
 	
 	private Vehicle[][][] vehicles;
 	private int numberOfFloors;
@@ -30,6 +31,8 @@ public class Garage extends Model {
     int weekendArrivals = 200; // average number of arriving cars per hour
     int weekDayPassArrivals= 50; // average number of arriving cars per hour
     int weekendPassArrivals = 5; // average number of arriving cars per hour
+    int weekDayResArrivals = 25; // average number of arriving cars per hour
+    int weekendResArrivals = 20; // average number of arriving cars per hour
 
     int enterSpeed = 3; // number of cars that can enter per minute
     int paymentSpeed = 7; // number of cars that can pay per minute
@@ -213,7 +216,9 @@ public class Garage extends Model {
     	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
         addArrivingCars(numberOfCars, REGULAR);    	
     	numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
-        addArrivingCars(numberOfCars, SUBSCRIPTION);    	
+        addArrivingCars(numberOfCars, SUBSCRIPTION);
+        numberOfCars=getNumberOfCars(weekDayResArrivals, weekendResArrivals);
+        addArrivingCars(numberOfCars, RESERVATION);
     }
 
     private void carsEntering(CustomerQueue queue){
@@ -291,7 +296,12 @@ public class Garage extends Model {
             for (int i = 0; i < numberOfCars; i++) {
             	entrancePassQueue.addCar(new SubscriptionCar());
             }
-            break;	            
+            break;
+    	case RESERVATION:
+    		for (int i = 0; i < numberOfCars; i++) {
+            	entrancePassQueue.addCar(new ReservationCar());
+            }
+            break;
     	}
     }
     
