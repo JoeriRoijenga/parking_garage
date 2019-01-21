@@ -4,7 +4,7 @@ import java.util.Random;
 
 import nl.hanze.st.mvc.Model;
 
-public class Garage extends Model {
+public class Garage extends Model implements Runnable {
 	private static final String REGULAR = "1";
 	private static final String SUBSCRIPTION = "2";
 
@@ -24,8 +24,8 @@ public class Garage extends Model {
 	private int minute = 0;
 
 	private int tickPause = 100;
-	private boolean running = true;
-	private int period = 0;
+	private boolean running;
+	private int period;
 
 	int weekDayArrivals = 100; // average number of arriving cars per hour
 	int weekendArrivals = 200; // average number of arriving cars per hour
@@ -49,10 +49,6 @@ public class Garage extends Model {
 		vehicles = new Vehicle[numberOfFloors][numberOfRows][numberOfPlaces];
 	}
 
-	public void start() {
-		notifyView();
-	}
-
 	public int getNumberOfFloors() {
 		return numberOfFloors;
 	}
@@ -69,16 +65,29 @@ public class Garage extends Model {
 		return numberOfOpenSpots;
 	}
 
-	public void tickThread() {
+	public void start() {
+		new Thread(this).start();
 
-		int i = 0;	
+	}
 
-		while (running && i < period) {
+	@Override
+	public void run() {
+		int i = 0;
+		running = true;
 
+		while ((running) && (i <= period)) {
+
+			printTime();
+			
+			notifyView();
+			
+			
 			advanceTime();
+			
+
 			handleExit();
 			updateViews();
-			
+
 			try {
 				Thread.sleep(tickPause);
 			} catch (InterruptedException e) {
@@ -86,17 +95,22 @@ public class Garage extends Model {
 			}
 			handleEntrance();
 
-			if(period > 0) {
-				i++;			
+			if (period > 0) {
+				i++;
 			}
-			
-			i = (period > 0) ? i++ : 0 ;
-			
-		
+
 		}
+
+		setPeriod(0);
 	}
 
-
+	private void printTime() {
+		if (minute < 10) {
+			System.out.println("Dag: " + day + " " + hour + ":" + "0" + minute);
+		} else {
+			System.out.println("Dag: " + day + " " + hour + ":" + minute);
+		}
+	}
 
 	private void advanceTime() {
 		// Advance the time by one minute.
@@ -314,5 +328,6 @@ public class Garage extends Model {
 	public void setRunning(boolean b) {
 		running = b;
 	}
+
 
 }

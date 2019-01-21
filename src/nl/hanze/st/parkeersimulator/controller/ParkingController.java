@@ -3,6 +3,7 @@ package nl.hanze.st.parkeersimulator.controller;
 import nl.hanze.st.mvc.Controller;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
+import nl.hanze.st.parkeersimulator.view.ButtonView;
 
 public class ParkingController extends Controller {
 
@@ -19,28 +20,25 @@ public class ParkingController extends Controller {
 
 	@Override
 	protected boolean event(View view, int event_id) {
-		switch (event_id) {
-		case EVENT_ID_START:
-			garage.setRunning(true);
-			garage.tickThread();
-			return true;
-			
-		case EVENT_ID_PAUSE:
-			garage.setRunning(false);
-			return true;
 
-		case EVENT_ID_HOUR:
-			garage.setRunning(false);
-			garage.setPeriod(60);
-			garage.tickThread();
-			return true;
+			switch (event_id) {
+			case EVENT_ID_START:
+				garage.start();
+				return true;
 
-		default:
-			return false;
-		}
+			case EVENT_ID_PAUSE:
+				garage.setRunning(false);
+				return true;
+
+			case EVENT_ID_HOUR:
+				garage.setRunning(false);
+				garage.setPeriod(59);
+				garage.start();
+				return true;
+
+			default:
+				return false;
+			}
 		
-
-
 	}
-
 }
