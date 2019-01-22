@@ -14,6 +14,8 @@ public class Garage extends Model {
     private int numberOfRows;
     private int numberOfPlaces;
     private int numberOfOpenSpots;
+    private int numberOfTakenSpotsByRegular;
+    private int numberOfTakenSpotsBySubscription;
     
     private CustomerQueue entranceCarQueue;
     private CustomerQueue entrancePassQueue;
@@ -24,7 +26,7 @@ public class Garage extends Model {
     private int hour = 0;
     private int minute = 0;
 
-    private int tickPause = 100;
+    private int tickPause = 2500;
 
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
@@ -46,6 +48,9 @@ public class Garage extends Model {
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
         this.numberOfOpenSpots =numberOfFloors*numberOfRows*numberOfPlaces;
+        this.numberOfTakenSpotsByRegular = 0;
+        this.numberOfTakenSpotsBySubscription = 0;
+        
 		vehicles = new Vehicle[numberOfFloors][numberOfRows][numberOfPlaces];
 	}
 	
@@ -67,6 +72,14 @@ public class Garage extends Model {
 
     public int getNumberOfOpenSpots(){
     	return numberOfOpenSpots;
+    }
+    
+    public int getNumberOfTakenSpotsBySubscription() {
+    	return numberOfTakenSpotsBySubscription;
+    }
+    
+    public int getNumberOfTakenSpotsByRegular() {
+    	return numberOfTakenSpotsByRegular;
     }
 	
     public void tickThread() {
@@ -135,6 +148,13 @@ public class Garage extends Model {
         if (oldVehicle == null) {
             vehicles[location.getFloor()][location.getRow()][location.getPlace()] = vehicle;
             vehicle.setLocation(location);
+            
+            if (vehicle instanceof RegularCar) {
+            	numberOfTakenSpotsByRegular++;
+            } else if (vehicle instanceof SubscriptionCar) {
+            	numberOfTakenSpotsBySubscription++;
+            }
+            
             numberOfOpenSpots--;
             return true;
         }
@@ -151,6 +171,12 @@ public class Garage extends Model {
         }
         vehicles[location.getFloor()][location.getRow()][location.getPlace()] = null;
         vehicle.setLocation(null);
+      
+        if (vehicle instanceof RegularCar) {
+        	numberOfTakenSpotsByRegular--;
+        } else if (vehicle instanceof SubscriptionCar) {
+        	numberOfTakenSpotsBySubscription--;
+        }
         numberOfOpenSpots++;
         return vehicle;
     }

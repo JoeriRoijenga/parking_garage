@@ -35,34 +35,78 @@ public class PieGraphicView extends View {
 		
 		Graphics g = pieGraphicImage.getGraphics();
         
-		drawGraphic(g, garage.getNumberOfOpenSpots());
+		drawGraphic(g, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription());
 	}
 	
-	private void drawGraphic(Graphics g, int a) {
-		double total = a + 100;	
-		
-		double percentage = (a / total) * 100;
-		int degree = (int) Math.round((360 / 100) * percentage); // 253.0
-		int leftover = Math.round(360 - degree); // 107.0
+	private void drawGraphic(Graphics g, double regular, double subscription) {   
+		double degreeRegular = 0;
+		double degreeSubscription = 0;
+		if (regular != 0 & subscription != 0) {
+			double total = subscription + regular;
+			
+			double percentageRegular = (regular / total) * 100;
+			double percentageSubscription = (subscription / total) * 100;
+			
+			degreeRegular = Math.round(360 * (percentageRegular / 100)); // 253.0
+			degreeSubscription = Math.round(360 * (percentageSubscription / 100)); // 253.0				
+			
+			/*
+			g.setColor(Color.WHITE);
+			g.fillRect(100, 20, 300, 300);
+			g.setColor(Color.RED);
+			
+			g.fillArc(165, 80, 180, 180, 0, 80);
+			g.setColor(Color.BLUE);
 
+			g.fillArc(165, 80, 180, 180, 80, 120);
+			*/
+			/*
+			Graphics2D g2 = (Graphics2D) g;
+			
+			Arc2D arc = new Arc2D.Float(Arc2D.PIE);
+			arc.setFrame(100, 20, 300, 300);
+			
+			arc.setAngleStart(0);
+		    arc.setAngleExtent(240);
+		    g2.setColor(Color.gray);
+		    g2.draw(arc);
+		    g2.setColor(Color.red);
+		    g2.fill(arc);
+			 */
+		    /*
+		    arc.setAngleStart(degree);
+		    arc.setAngleExtent(leftover);
+		    g2.setColor(Color.gray);
+		    g2.draw(arc);
+		    g2.setColor(Color.blue);
+		    g2.fill(arc);
+		    */
+		}
+		
 		Graphics2D g2 = (Graphics2D) g;
 		
 		Arc2D arc = new Arc2D.Float(Arc2D.PIE);
 		arc.setFrame(100, 20, 300, 300);
 		
 		arc.setAngleStart(0);
-	    arc.setAngleExtent(degree);
+	    arc.setAngleExtent(degreeRegular);
 	    g2.setColor(Color.gray);
 	    g2.draw(arc);
 	    g2.setColor(Color.red);
 	    g2.fill(arc);
-	 
-	    arc.setAngleStart(degree);
-	    arc.setAngleExtent(leftover);
+	    /*
+	    arc.setAngleStart(degreeRegular);
+	    arc.setAngleExtent(degreeSubscription);
 	    g2.setColor(Color.gray);
 	    g2.draw(arc);
 	    g2.setColor(Color.blue);
 	    g2.fill(arc);
+	    */
+	    
+	    System.out.println("Regular: " + degreeRegular);
+	    System.out.println("Subscription: " + degreeSubscription);
+	    System.out.println("Total: " + (degreeSubscription + degreeRegular));
+	    System.out.println("------");
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -70,6 +114,6 @@ public class PieGraphicView extends View {
             return;
         }
 		
-		drawGraphic(g, 0);
+		drawGraphic(g, 0, 0);
 	}	
 }
