@@ -13,6 +13,8 @@ public class Garage extends Model implements Runnable {
 	private int numberOfRows;
 	private int numberOfPlaces;
 	private int numberOfOpenSpots;
+	
+	
 
 	private CustomerQueue entranceCarQueue;
 	private CustomerQueue entrancePassQueue;
@@ -23,7 +25,7 @@ public class Garage extends Model implements Runnable {
 	private int hour = 0;
 	private int minute = 0;
 
-	private int tickPause = 100;
+	private int tickPause = 1000;
 	private boolean running;
 	private int period;
 
@@ -35,6 +37,7 @@ public class Garage extends Model implements Runnable {
 	int enterSpeed = 3; // number of cars that can enter per minute
 	int paymentSpeed = 7; // number of cars that can pay per minute
 	int exitSpeed = 5; // number of cars that can leave per minute
+	
 
 	public Garage(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
 		entranceCarQueue = new CustomerQueue();
@@ -86,6 +89,7 @@ public class Garage extends Model implements Runnable {
 			
 
 			handleExit();
+			
 			updateViews();
 
 			try {
@@ -98,9 +102,13 @@ public class Garage extends Model implements Runnable {
 			if (period > 0) {
 				i++;
 			}
-
+			
+			if (i > period) {
+				running = false;
+			}
+			notifyView();
 		}
-
+		
 		setPeriod(0);
 	}
 
@@ -327,7 +335,23 @@ public class Garage extends Model implements Runnable {
 
 	public void setRunning(boolean b) {
 		running = b;
+		
 	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
+	
+	
+	public void setTickPause(int fps) {
+		tickPause = 1001 - fps;
+		
+	}
+
+
+
+		
 
 
 }

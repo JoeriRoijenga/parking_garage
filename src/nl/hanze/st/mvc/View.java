@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 public abstract class View extends JPanel {
 
-	private Controller controller;
+	protected Controller controller;
 
 	/**
 	 * Attach controller to view
@@ -32,9 +32,11 @@ public abstract class View extends JPanel {
 	 * Notify from model. Called by class Model
 	 * @param model Model
 	 */
-	void notify(Model model) {
+	protected void notify(Model model) {
 		update(model);
 	}
+	
+	
 
 	/**
 	 * Updatehandler
