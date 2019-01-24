@@ -7,6 +7,7 @@ public abstract class Vehicle extends Actor {
 	private int minutesLeft;
     private boolean isPaying;
     private boolean hasToPay;
+    private int stayTime;
     
 	public Vehicle() {
     	Random random = new Random();
@@ -14,6 +15,15 @@ public abstract class Vehicle extends Actor {
         this.setMinutesLeft(stayMinutes);
 
 	}
+	
+	public void setStayTime(int stayTime) {
+		this.stayTime = stayTime;
+        this.setMinutesLeft(stayTime);
+    }
+	
+	public int getStayTime() {
+		return stayTime;
+    }
 	
     public int getMinutesLeft() {
         return minutesLeft;

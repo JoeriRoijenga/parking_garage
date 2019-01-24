@@ -1,4 +1,4 @@
-package nl.hanze.st.parkeersimulator.model;
+
 
 import java.util.List;
 import java.util.Random;
@@ -72,10 +72,10 @@ public class Garage extends Model {
 		locations = getFirst10Spots(locations, this.numberOfFloors, this.numberOfPlaces);
 		
 		reservation.makeReservation(locations, "Shell inc");
-		reservation.setColor("Shell inc", Color.GREEN);
+		reservation.setColor("Shell inc", Color.green);
 		
 		reservation.makeReservation(locations, "Hope for paws");
-		reservation.setColor("Hope for paws", Color.YELLOW);
+		reservation.setColor("Hope for paws", Color.yellow);
 		
 		carLocation = new HashMap<>();
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
@@ -166,6 +166,7 @@ public class Garage extends Model {
         // Update the car park view.
         notifyView();	
     }
+    
     
 	public Vehicle getCarAt(Location location) {
         if (!locationIsValid(location)) {
@@ -258,7 +259,8 @@ public class Garage extends Model {
     private void carsArriving(){
     	Random random = new Random();
     	
-    	int reservationProbability = random.nextInt(this.reservationChance);
+    	int reservationProbability = 0;
+    	// random.nextInt(this.reservationChance)
     	
     	if (reservationProbability == 0) {
     		List<String> keys = new ArrayList<String>(reservation.getReservation().keySet());
@@ -284,12 +286,19 @@ public class Garage extends Model {
     			break;
     		}
     		
+    		String company = car.getCompany();
+    		ArrayList<Location> carsLocation = reservation.getCompanyLocations(company);
     		Random random = new Random();
     		
-    		int stayTime = (int) (15 + random.nextFloat() * 10 * 60);
-    		car.setStayTime(stayTime);
-    		Location freeLocation = getFirstFreeLocation();
-    		setCarAt(freeLocation, car);    				
+    		for (Location location : carsLocation) {
+    			if (getCar(location) == null) {
+    				int stayTime = (int) (15 + random.nextFloat() * 10 * 60);
+    				car.setStayTime(stayTime);
+    				
+    				this.carParking(location, car);
+    				break;
+    			}
+    		}
     	}
     	
         int i=0;
@@ -311,13 +320,18 @@ public class Garage extends Model {
         return carLocation.get(location);
     }
     
-//    public boolean carParking(Location location, Car car) {
-//        if (!locationIsValid(location)) {
-//            return false;
-//        }
-//        setCarAt(location, car);
-//        return true;
-//    }
+    public boolean carParking(Location location, Car car) {
+        if (!locationIsValid(location)) {
+            return false;
+        }
+        Car oldCar = getCar(location);
+        if (oldCar == null) {
+            carLocation.put(location,car);
+            car.setLocation(location);
+            return true;
+        }
+        return false;
+    }
 
     private void carsReadyToLeave(){
         // Add leaving cars to the payment queue.
@@ -331,7 +345,8 @@ public class Garage extends Model {
         	if (vehicle.getHasToPay()){
         		vehicle.setIsPaying(true);
 	            paymentCarQueue.addCar(vehicle);
-        	} else {
+        	}
+        	else {
         		carLeavesSpot(vehicle);
         	}
         	vehicle = getFirstLeavingCar();
