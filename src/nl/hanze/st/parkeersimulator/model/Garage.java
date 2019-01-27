@@ -26,7 +26,7 @@ public class Garage extends Model {
     private int hour = 0;
     private int minute = 0;
 
-    private int tickPause = 2500;
+    private int tickPause = 500;
 
     int weekDayArrivals= 100; // average number of arriving cars per hour
     int weekendArrivals = 200; // average number of arriving cars per hour
