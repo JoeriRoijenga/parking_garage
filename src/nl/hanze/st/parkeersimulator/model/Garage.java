@@ -6,7 +6,6 @@ import java.util.*;
 import java.awt.*;
 
 import nl.hanze.st.mvc.Model;
-import nl.hanze.st.mvc.Model;
 
 public class Garage extends Model {
 	private static final String REGULAR = "1";
@@ -18,6 +17,8 @@ public class Garage extends Model {
     private int numberOfRows;
     private int numberOfPlaces;
     private int numberOfOpenSpots;
+    
+    private int placesForSubscriptionCars = 120;
     
     private CustomerQueue entranceCarQueue;
     private CustomerQueue entrancePassQueue;
@@ -202,14 +203,26 @@ public class Garage extends Model {
         return vehicle;
     }
     
-    public Location getFirstFreeLocation() {
+    public Location getFirstFreeLocation(Vehicle vehicle) {
+    	int subspaces = 0;
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
+                	subspaces++;
+                	if ((vehicle instanceof SubscriptionCar)) {
+                		Location location = new Location(floor, row, place);
+                        
+                        if (getCarAt(location) == null) {
+                            return location;
+                        }
+                	}
+                	if (subspaces > placesForSubscriptionCars) {
+	                	Location location = new Location(floor, row, place);
+	                    
+	                    if (getCarAt(location) == null) {
+	                        return location;
+	                    }
+                	}
                 }
             }
         }
@@ -278,18 +291,18 @@ public class Garage extends Model {
     private void carsEntering(CustomerQueue queue){
     	// Remove reservation car from queue and give a space
     	for (int i=0;i<enterSpeed;i++) {
-    		ReservationCar car = (ReservationCar) reservationCarQueue.removeCar();
+    		Vehicle vehicle = (ReservationCar) reservationCarQueue.removeCar();
     	
-    		if (car == null) {
+    		if (vehicle == null) {
     			break;
     		}
     		
     		Random random = new Random();
     		
     		int stayTime = (int) (15 + random.nextFloat() * 10 * 60);
-    		car.setStayTime(stayTime);
-    		Location freeLocation = getFirstFreeLocation();
-    		setCarAt(freeLocation, car);    				
+    		vehicle.setStayTime(stayTime);
+    		Location freeLocation = getFirstFreeLocation(vehicle);
+    		setCarAt(freeLocation, vehicle);    				
     	}
     	
         int i=0;
@@ -298,7 +311,7 @@ public class Garage extends Model {
     			getNumberOfOpenSpots()>0 && 
     			i<enterSpeed) {
             Vehicle vehicle = queue.removeCar();
-            Location freeLocation = getFirstFreeLocation();
+            Location freeLocation = getFirstFreeLocation(vehicle);
             setCarAt(freeLocation, vehicle);
             i++;
         }
