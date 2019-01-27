@@ -59,7 +59,7 @@ public class Garage extends Model {
 		this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
-        this.numberOfOpenSpots =numberOfFloors*numberOfRows*numberOfPlaces;
+        this.numberOfOpenSpots = numberOfFloors*numberOfRows*numberOfPlaces;
 		vehicles = new Vehicle[numberOfFloors][numberOfRows][numberOfPlaces];
 		
 		/**
@@ -269,7 +269,7 @@ public class Garage extends Model {
     		
     	} else {    	
     		int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
-        	addArrivingCars(numberOfCars, REGULAR);    	
+    		addArrivingCars(numberOfCars, REGULAR);    	
     		numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
         	addArrivingCars(numberOfCars, SUBSCRIPTION);
     	}
@@ -311,14 +311,6 @@ public class Garage extends Model {
         return carLocation.get(location);
     }
     
-//    public boolean carParking(Location location, Car car) {
-//        if (!locationIsValid(location)) {
-//            return false;
-//        }
-//        setCarAt(location, car);
-//        return true;
-//    }
-
     private void carsReadyToLeave(){
         // Add leaving cars to the payment queue.
         Vehicle vehicle = getFirstLeavingCar();
