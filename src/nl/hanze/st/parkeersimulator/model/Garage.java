@@ -32,6 +32,7 @@ public class Garage extends Model implements Runnable {
 	 * @param vehicles This param will contain all the cars in the parking lot.
 	 */
 	private Vehicle[][][] vehicles;
+
 	
 	/**
 	 * @param numberOfFloors This param contains all the floors of the parking lot.
@@ -145,7 +146,7 @@ public class Garage extends Model implements Runnable {
     private boolean running;
 
 	private int period;
-
+	boolean automatic = true;
     /**
      * Constructor
      * 
@@ -619,18 +620,14 @@ public class Garage extends Model implements Runnable {
 		int i = 0;
 		running = true;
 
-		while ((running) && (i <= period)) {
+		while ((running) && (i < period || automatic)) {
 
 			printTime();
-			
-			notifyView();
-			
-			
+
 			advanceTime();
-			
 
 			handleExit();
-			
+
 			updateViews();
 
 			try {
@@ -643,13 +640,14 @@ public class Garage extends Model implements Runnable {
 			if (period > 0) {
 				i++;
 			}
-			
-			if (i > period) {
+
+			if (i >= period && automatic == false) {
 				running = false;
 			}
-			notifyView();
+
 		}
-		
+		notifyView();
+
 		setPeriod(0);
 	}
 
@@ -667,14 +665,28 @@ public class Garage extends Model implements Runnable {
 
 	public void setRunning(boolean b) {
 		running = b;
-		
 	}
-	
+
 	public boolean isRunning() {
 		return running;
 	}
-	
+
 	public void setTickPause(int fps) {
 		tickPause = 1001 - fps;
+	}
+
+	public void setAutomatic(boolean b) {
+		automatic = b;
+	}
+	
+	public String getTime() {
+		String timeString;
+		if (minute < 10) {
+			timeString = "Dag: " + day + " " + hour + ":" + "0" + minute;
+		} else {
+			timeString = "Dag: " + day + " " + hour + ":" + minute;
+		}
+
+		return timeString;
 	}
 }

@@ -2,7 +2,6 @@ package nl.hanze.st.parkeersimulator.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,17 +15,13 @@ import static nl.hanze.st.parkeersimulator.controller.ParkingController.*;
 
 public class ButtonView extends View {
 
-	private JButton onButton, offButton, periodButton;
-
-	public ArrayList<JButton> buttonList;
+	private JButton onButton, offButton, periodButton, tickButton;
 
 	public JPanel buttonPanel;
 
 	public ButtonView() {
-		buttonList = new ArrayList<>();
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		
 		buttonPanel = new JPanel();
 		buttonPanel.setBackground(Color.YELLOW);
 		add(buttonPanel);
@@ -40,12 +35,19 @@ public class ButtonView extends View {
 		offButton.setPreferredSize(new Dimension(200, 80));
 		offButton.addActionListener((e) -> notifyController(EVENT_ID_PAUSE));
 		buttonPanel.add(offButton);
+		offButton.setEnabled(false);
 
 
 		periodButton = new JButton("Uur vooruit");
 		periodButton.setPreferredSize(new Dimension(200, 80));
 		periodButton.addActionListener((e) -> notifyController(EVENT_ID_HOUR));
 		buttonPanel.add(periodButton);
+		
+		tickButton = new JButton("Tick");
+		tickButton.setPreferredSize(new Dimension(200, 80));
+		tickButton.addActionListener((e) -> notifyController(EVENT_ID_TICK));
+		buttonPanel.add(tickButton);
+		
 
 
 		;
@@ -60,11 +62,13 @@ public class ButtonView extends View {
 			onButton.setEnabled(false);
 			offButton.setEnabled(true);
 			periodButton.setEnabled(false);
+			tickButton.setEnabled(false);
+			
 		} else {
 			onButton.setEnabled(true);
 			offButton.setEnabled(false);
 			periodButton.setEnabled(true);
-			
+			tickButton.setEnabled(true);
 			
 		}
 

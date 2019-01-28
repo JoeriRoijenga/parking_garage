@@ -1,5 +1,7 @@
 package nl.hanze.st.parkeersimulator.view;
 
+import static nl.hanze.st.parkeersimulator.controller.ParkingController.EVENT_ID_HOUR;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Hashtable;
@@ -13,6 +15,7 @@ import javax.swing.event.ChangeListener;
 
 import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.View;
+import nl.hanze.st.parkeersimulator.controller.SliderController;
 
 public class SliderView extends View {
 
@@ -20,7 +23,12 @@ public class SliderView extends View {
 
 	private JSlider slider;
 
-	public SliderView() {
+	private SliderController changeListener;
+
+	
+	public SliderView(SliderController listener) {
+		this.changeListener = listener;
+		
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -31,6 +39,7 @@ public class SliderView extends View {
 		
 		
 		slider = new JSlider(JSlider.HORIZONTAL, 0, 1000, 50);
+		slider.setValue(750);
 		slider.setPreferredSize(new Dimension(1000, 50));
 		
 
@@ -40,23 +49,12 @@ public class SliderView extends View {
 	        labels.put(1000, new JLabel("1 ms"));
 	        slider.setLabelTable(labels);
 	        slider.setPaintLabels(true);
+	        slider.setBackground(Color.YELLOW);
 	        
 
-		slider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider source = (JSlider) e.getSource();
-				if (!source.getValueIsAdjusting()) {
-					int fps = (int) source.getValue();
-					notifyController(fps);
-				}
-			}
+		slider.addChangeListener(changeListener);
 
-		}
-
-		);
-
-		sliderPanel.add(slider);
+	sliderPanel.add(slider);
 
 	}
 
@@ -64,6 +62,10 @@ public class SliderView extends View {
 	protected void update(Model model) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void setListener(SliderController listener) {
+		changeListener = listener;
 	}
 
 }
