@@ -6,7 +6,20 @@ import nl.hanze.st.parkeersimulator.controller.ParkingController;
 import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.view.ParkingView;
 
+/**
+ * Class Thread
+ * 
+ * This class is the view class that we will use for every child view.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class Thread {
+	/**
+	 * Main function to run the program.
+	 * 
+	 * @param args This param is used in case you will use extra params.
+	 */
 	public static void main(String[] args) {
 		JFrame window = new JFrame();
 		window.setTitle("MVC Voorbeeld");
