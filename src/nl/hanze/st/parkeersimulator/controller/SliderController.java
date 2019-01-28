@@ -1,28 +1,26 @@
 package nl.hanze.st.parkeersimulator.controller;
 
-import javax.swing.JButton;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import nl.hanze.st.mvc.Controller;
-import nl.hanze.st.mvc.Model;
-import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
 
-public class SliderController extends Controller {
+public class SliderController implements ChangeListener {
 
 	private Garage garage;
-	
-	private JButton onButton;
-	
-	public SliderController(Model model) {
-		super(model);
-		garage = (Garage) model;
 
+	public SliderController(Garage model) {
+		this.garage = model;
 	}
 
 	@Override
-	protected boolean event(View view, int event_id) {
-		garage.setTickPause(event_id);
-		return true;
+	public void stateChanged(ChangeEvent e) {
+		JSlider source = (JSlider) e.getSource();
+		if (!source.getValueIsAdjusting()) {
+			int fps = (int) source.getValue();
+			garage.setTickPause(fps);
+		}
 	}
 
 }

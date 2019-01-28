@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 public abstract class View extends JPanel {
 
-	protected Controller controller;
+	private Controller controller;
 
 	/**
 	 * Attach controller to view

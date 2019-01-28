@@ -18,7 +18,8 @@ public class ParkingController extends Controller {
 	public static final int EVENT_ID_START = 1;
 	public static final int EVENT_ID_PAUSE = 2;
 	public static final int EVENT_ID_HOUR = 3;
-
+	public static final int EVENT_ID_TICK = 4;
+	
 	private Garage garage;
 	
 
@@ -26,10 +27,6 @@ public class ParkingController extends Controller {
 	public ParkingController(Garage model) {
 		super(model);
 		garage = model;
-
-
-	
-	
 	}
 
 
@@ -41,6 +38,7 @@ public class ParkingController extends Controller {
 
 		switch (event_id) {
 		case EVENT_ID_START:
+			garage.setAutomatic(true);
 			garage.start();
 			return true;
 
@@ -50,11 +48,19 @@ public class ParkingController extends Controller {
 			return true;
 
 		case EVENT_ID_HOUR:
+			garage.setAutomatic(false);
 			garage.setRunning(false);
-			garage.setPeriod(59);
+			garage.setPeriod(60);
 			garage.start();
 			return true;
 
+		case EVENT_ID_TICK:
+			garage.setAutomatic(false);
+			garage.setRunning(false);
+			garage.setPeriod(1);
+			garage.start();
+			return true;
+			
 		default:
 			return false;
 		}
