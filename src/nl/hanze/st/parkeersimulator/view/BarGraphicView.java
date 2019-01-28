@@ -38,7 +38,7 @@ public class BarGraphicView extends View {
             BarGraphicImage = createImage(size.width, size.height);
         }
 		title = "Parked Cars";
-	    values = new double[]{60, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription()};
+	    values = new double[]{500, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription()};
 	    labels = new String[]{"", "Regular","Subscription"};
 	    colors = new Color[]{	        
     		Color.LIGHT_GRAY,

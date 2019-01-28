@@ -20,7 +20,7 @@ public class Thread {
 		Garage model = new Garage(3, 6, 30);
 		ParkingView parkingView = new ParkingView();
 		ParkingController parkingController = new ParkingController(model);
-		LineGraphicView pieView = new LineGraphicView();
+		BarGraphicView pieView = new BarGraphicView();
 		
 		parkingView.setController(parkingController);
 		model.addView(parkingView);

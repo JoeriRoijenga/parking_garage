@@ -151,6 +151,7 @@ public class LineGraphicView extends View {
         g.drawLine(width-3, lastVal2, width-2, y);
         lastVal2 = y;
         
+//        repaint();
 //        g.drawline
 //        g.drawImage(lineGraphicImage, 0, 0, null);
     }
