@@ -5,10 +5,12 @@ import java.awt.FlowLayout;
 
 import javax.swing.*;
 
+import nl.hanze.st.parkeersimulator.controller.MenuController;
 import nl.hanze.st.parkeersimulator.controller.ParkingController;
 import nl.hanze.st.parkeersimulator.controller.SliderController;
 import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.view.ButtonView;
+import nl.hanze.st.parkeersimulator.view.MenuView;
 import nl.hanze.st.parkeersimulator.view.ParkingView;
 import nl.hanze.st.parkeersimulator.view.SliderView;
 import nl.hanze.st.parkeersimulator.view.TimeView;
@@ -23,13 +25,21 @@ public class Main {
 		
 		ParkingController parkingController = new ParkingController(model);
 		SliderController sliderController = new SliderController(model);		
-
+		MenuController menuController = new MenuController(model);
+		
 		ParkingView parkingView = new ParkingView();
 		ButtonView buttonView = new ButtonView();
 		SliderView sliderView = new SliderView(sliderController);
 		TimeView timeView = new TimeView();
+		JMenuBar menubar = new JMenuBar();
 		
+		window.setJMenuBar(menubar);
+		JMenu settingsMenu = new JMenu("Settings");
+		MenuView menuView = new MenuView(settingsMenu);
+		menubar.add(settingsMenu);
+
 		buttonView.setController(parkingController);	
+		menuView.setController(menuController);
 		
 		model.addView(parkingView);
 		model.addView(buttonView);

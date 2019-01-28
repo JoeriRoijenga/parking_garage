@@ -147,6 +147,10 @@ public class Garage extends Model implements Runnable {
 
 	private int period;
 	boolean automatic = true;
+	
+	boolean menuAbout = false;
+	boolean menuSettings = false;
+	
     /**
      * Constructor
      * 
@@ -235,6 +239,14 @@ public class Garage extends Model implements Runnable {
 	 */
     public int getNumberOfOpenSpots(){
     	return numberOfOpenSpots;
+    }
+    
+    public boolean getMenuAbout() {
+    	return menuAbout;
+    }
+    
+    public void setMenuAbout(boolean show) {
+    	menuAbout = show;
     }
     
 	/**

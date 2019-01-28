@@ -49,42 +49,33 @@ public class ParkingController extends Controller {
 	 */
 	@Override
 	protected boolean event(View view, int event_id) {
-
 		switch (event_id) {
-		case EVENT_ID_START:
-			garage.setAutomatic(true);
-			garage.start();
-			return true;
-
-		case EVENT_ID_PAUSE:
-			garage.setRunning(false);
-			garage.notifyView();
-			return true;
-
-		case EVENT_ID_HOUR:
-			garage.setAutomatic(false);
-			garage.setRunning(false);
-			garage.setPeriod(60);
-			garage.start();
-			return true;
-
-		case EVENT_ID_TICK:
-			garage.setAutomatic(false);
-			garage.setRunning(false);
-			garage.setPeriod(1);
-			garage.start();
-			return true;
-			
-		default:
-			return false;
+			case EVENT_ID_START:
+				garage.setAutomatic(true);
+				garage.start();
+				return true;
+	
+			case EVENT_ID_PAUSE:
+				garage.setRunning(false);
+				garage.notifyView();
+				return true;
+	
+			case EVENT_ID_HOUR:
+				garage.setAutomatic(false);
+				garage.setRunning(false);
+				garage.setPeriod(60);
+				garage.start();
+				return true;
+	
+			case EVENT_ID_TICK:
+				garage.setAutomatic(false);
+				garage.setRunning(false);
+				garage.setPeriod(1);
+				garage.start();
+				return true;
+				
+			default:
+				return false;
 		}
-
-	}
-
-
-
-	
-	
-	
-	
+	}	
 }
