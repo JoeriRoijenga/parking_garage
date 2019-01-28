@@ -193,6 +193,15 @@ public class Garage extends Model implements Runnable {
         }
 	}
 	
+	/**
+	 * Returns the first 10 free locations
+	 * 
+	 * @param locations Empty locations ArrayList.
+	 * @param floors Amount of floors.
+	 * @param rows Amount of rows.
+	 *
+	 * @return ArrayList of locations.
+	 */
 	public ArrayList<Location> getFirst10Spots(ArrayList<Location> locations, int floors, int rows) {
 		for (int i=0;i<31;i++) {
 			locations.add(new Location(floors-1, rows-2, i));
@@ -498,6 +507,12 @@ public class Garage extends Model implements Runnable {
         }
     }
     
+    /**
+     * This method will return the car on a location.
+     * 
+     * @param location of the car you want to get.
+     * @return Car the car on the location
+     */
     public Car getCar(Location location) {
         if (!locationIsValid(location)) {
             return null;
@@ -596,6 +611,11 @@ public class Garage extends Model implements Runnable {
     	}
     }
     
+    /**
+     * This method will return a reservation.
+     * 
+     * @return reservation a reservation
+     */
     public Reservation getReservations() {
         return reservation;
     }
@@ -610,6 +630,9 @@ public class Garage extends Model implements Runnable {
         exitCarQueue.addCar(vehicle);
     }
 
+    /**
+     * This method creates and starts a new Thread.
+     */
 	public void start() {
 		new Thread(this).start();
 
@@ -651,6 +674,9 @@ public class Garage extends Model implements Runnable {
 		setPeriod(0);
 	}
 
+	/**
+	 * This method will print the time in the console.
+	 */
 	private void printTime() {
 		if (minute < 10) {
 			System.out.println("Dag: " + day + " " + hour + ":" + "0" + minute);
@@ -659,26 +685,56 @@ public class Garage extends Model implements Runnable {
 		}
 	}
 
+	/**
+	 * This method sets the period in minutes
+	 * 
+	 * @param int periodMinutes the period in minutes you want to set 
+	 */
 	public void setPeriod(int periodMinutes) {
 		period = periodMinutes;
 	}
 
+	/**
+	 * This method will set if the program is running
+	 * 
+	 * @param b true or false
+	 */
 	public void setRunning(boolean b) {
 		running = b;
 	}
 
+	/**
+	 * This method looks if the program is running.
+	 * 
+	 * @return boolean running true or false
+	 */
 	public boolean isRunning() {
 		return running;
 	}
 
+	/**
+	 * This method make the simulation go quicker or slower by setting the tickPause.
+	 * 
+	 * @param int fps with how much to decrease the speed.
+	 */
 	public void setTickPause(int fps) {
 		tickPause = 1001 - fps;
 	}
 
+	/**
+	 * This method set if it is automatic or not.
+	 * 
+	 * @param b true or false.
+	 */
 	public void setAutomatic(boolean b) {
 		automatic = b;
 	}
 	
+	/**
+	 * This method is for getting the time.
+	 * 
+	 * @return String sends back the time
+	 */
 	public String getTime() {
 		String timeString;
 		if (minute < 10) {

@@ -38,12 +38,15 @@ public class TimeView extends View {
 		Garage garage = (Garage) model;
 		String timeString = garage.getTime();
 		setTime(timeString);
-		
 	}
 	
+	/**
+	 * This method sets the time
+	 * 
+	 * @param String timeInput the time 
+	 */
 	public void setTime(String timeInput) {
-		time.setText(timeInput);
-		
+		time.setText(timeInput);	
 	}
 	
 	
