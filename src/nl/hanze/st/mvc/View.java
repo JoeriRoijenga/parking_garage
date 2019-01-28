@@ -11,7 +11,6 @@ import javax.swing.JPanel;
  * @version 0.1 (18-1-2019)
  */
 public abstract class View extends JPanel {
-
 	/**
 	 * @param controller This param contains the controller that's used with the view.
 	 */
@@ -43,9 +42,11 @@ public abstract class View extends JPanel {
 	 * Notify from model. Called by class Model
 	 * @param model Model
 	 */
-	void notify(Model model) {
+	protected void notify(Model model) {
 		update(model);
 	}
+	
+	
 
 	/**
 	 * Updatehandler

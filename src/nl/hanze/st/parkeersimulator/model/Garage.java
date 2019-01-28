@@ -15,7 +15,7 @@ import nl.hanze.st.mvc.Model;
  * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
  * @version 0.1 (18-1-2019)
  */
-public class Garage extends Model {
+public class Garage extends Model implements Runnable {
 	/**
 	 * @param REGULAR This param contains a string object with the number used for regular cars.
 	 */
@@ -25,6 +25,7 @@ public class Garage extends Model {
 	 * @param SUBSCRIPTION This param contains a string object with the number used for subscription cars.
 	 */
 	private static final String SUBSCRIPTION = "2";
+
 	private static final String RESERVATION = "3";
 	
 	/**
@@ -140,6 +141,10 @@ public class Garage extends Model {
      * @param exitSpeed This param will contain the speed of vehicles leaving.
      */
     int exitSpeed = 5;
+
+    private boolean running;
+
+	private int period;
 
     /**
      * Constructor
@@ -603,4 +608,73 @@ public class Garage extends Model {
     	removeCarAt(vehicle.getLocation());
         exitCarQueue.addCar(vehicle);
     }
+
+	public void start() {
+		new Thread(this).start();
+
+	}
+
+	@Override
+	public void run() {
+		int i = 0;
+		running = true;
+
+		while ((running) && (i <= period)) {
+
+			printTime();
+			
+			notifyView();
+			
+			
+			advanceTime();
+			
+
+			handleExit();
+			
+			updateViews();
+
+			try {
+				Thread.sleep(tickPause);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			handleEntrance();
+
+			if (period > 0) {
+				i++;
+			}
+			
+			if (i > period) {
+				running = false;
+			}
+			notifyView();
+		}
+		
+		setPeriod(0);
+	}
+
+	private void printTime() {
+		if (minute < 10) {
+			System.out.println("Dag: " + day + " " + hour + ":" + "0" + minute);
+		} else {
+			System.out.println("Dag: " + day + " " + hour + ":" + minute);
+		}
+	}
+
+	public void setPeriod(int periodMinutes) {
+		period = periodMinutes;
+	}
+
+	public void setRunning(boolean b) {
+		running = b;
+		
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public void setTickPause(int fps) {
+		tickPause = 1001 - fps;
+	}
 }
