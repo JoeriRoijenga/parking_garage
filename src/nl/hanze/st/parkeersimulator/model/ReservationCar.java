@@ -12,7 +12,7 @@ import java.awt.Color;
  */
 
 public class ReservationCar extends Car {
-	private static final Color color = Color.GRAY;
+	private Color color;
 	private String company;
 	
 	/**
@@ -20,8 +20,9 @@ public class ReservationCar extends Car {
 	 * 
 	 * @param company name of the company the car is part of
 	 */
-	public ReservationCar(String company) {
+	public ReservationCar(String company, Color color) {
 		this.company = company;
+		this.color = color;
 	}
 	
 	/**
@@ -34,9 +35,20 @@ public class ReservationCar extends Car {
 	}
 	
 	/**
+	 * This method returns the color of the company.
+	 * 
 	 * @return Color the color of the car 
 	 */
 	public Color getColor() {
 		return color;
+	}
+	
+	/**
+	 * This method sets the color for the reservation car
+	 * 
+	 * @param color the color of the car
+	 */
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }

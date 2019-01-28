@@ -25,8 +25,6 @@ public class Garage extends Model implements Runnable {
 	 * @param SUBSCRIPTION This param contains a string object with the number used for subscription cars.
 	 */
 	private static final String SUBSCRIPTION = "2";
-
-	private static final String RESERVATION = "3";
 	
 	/**
 	 * @param vehicles This param will contain all the cars in the parking lot.
@@ -118,10 +116,9 @@ public class Garage extends Model implements Runnable {
      */
     int weekDayPassArrivals= 50;
 
-    int reservationChance = 8; // x in 1 change a reservation
+    int reservationChance = 12; // x in 1 change a reservation
     int amountOfReservationCars = 0; 
-    
-    private static HashMap<Location, Car> carLocation;
+    int maxReservationSpots = 40;
     
     /**
      * @param weekendPassArrivals this param contains the average number of subscription car arrivals in the weekends per hour. 
@@ -174,7 +171,7 @@ public class Garage extends Model implements Runnable {
 		this.reservation = new Reservation();
 		
 		ArrayList<Location> locations = new ArrayList<>();
-		locations = getFirst10Spots(locations, this.numberOfFloors, this.numberOfPlaces);
+		locations = getReservationSpots(locations, numberOfFloors, numberOfRows, this.maxReservationSpots);
 		
 		reservation.makeReservation(locations, "Shell inc");
 		reservation.setColor("Shell inc", Color.GREEN);
@@ -182,32 +179,6 @@ public class Garage extends Model implements Runnable {
 		reservation.makeReservation(locations, "Hope for paws");
 		reservation.setColor("Hope for paws", Color.YELLOW);
 		
-		carLocation = new HashMap<>();
-        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
-            for (int row = 0; row < getNumberOfRows(); row++) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    carLocation.put(location,null);
-                }
-            }
-        }
-	}
-	
-	/**
-	 * Returns the first 10 free locations
-	 * 
-	 * @param locations Empty locations ArrayList.
-	 * @param floors Amount of floors.
-	 * @param rows Amount of rows.
-	 *
-	 * @return ArrayList of locations.
-	 */
-	public ArrayList<Location> getFirst10Spots(ArrayList<Location> locations, int floors, int rows) {
-		for (int i=0;i<31;i++) {
-			locations.add(new Location(floors-1, rows-2, i));
-		}
-		
-		return locations;
 	}
 	
 	/** 
@@ -329,13 +300,15 @@ public class Garage extends Model implements Runnable {
 	 * This method will set a new car at the current location.
 	 * 
 	 * @param location This param contains the current location used.
-	 * @param vehicle This param contains the curren vehicle used.
+	 * @param vehicle This param contains the current vehicle used.
 	 * @return boolean This return will return a success or a fail.
 	 */
     public boolean setCarAt(Location location, Vehicle vehicle) {
+    	System.out.println(amountOfReservationCars);
         if (!locationIsValid(location)) {
             return false;
         }
+        
         Vehicle oldVehicle = getCarAt(location);
         if (oldVehicle == null) {
             vehicles[location.getFloor()][location.getRow()][location.getPlace()] = vehicle;
@@ -343,8 +316,34 @@ public class Garage extends Model implements Runnable {
             numberOfOpenSpots--;
             return true;
         }
+        
         return false;
     }
+    
+    /**
+	 * Returns the first 15 free locations in the last Row of the top floor
+	 * 
+	 * @param locations Empty locations ArrayList.
+	 * @param floors Amount of floors.
+	 * @param rows Amount of rows.
+	 *
+	 * @return ArrayList of locations.
+	 */
+	public ArrayList<Location> getReservationSpots(ArrayList<Location> locations, int floors, int rows, int maxSpots) {
+		int amountOfSpots = maxSpots;
+		
+		for (int r=rows; r>0; r--) {
+			for (int p=0;p<30;p++) {
+				amountOfSpots--;
+				locations.add(new Location(floors-1, rows-1, p));
+				if (amountOfSpots <= 0) {
+					break;
+				}
+			}
+		}
+		
+		return locations;
+	}
 
     /**
      * This method will remove the car at the current location.
@@ -462,7 +461,7 @@ public class Garage extends Model implements Runnable {
     		List<String> keys = new ArrayList<String>(reservation.getReservation().keySet());
     		String randomCompany = keys.get(random.nextInt(reservation.getReservation().size()));
     		
-    		reservationCarQueue.addCar(new ReservationCar(randomCompany));
+    		reservationCarQueue.addCar(new ReservationCar(randomCompany, reservation.getColor(randomCompany)));
     		amountOfReservationCars ++;
     		
     	} else {    	
@@ -479,20 +478,30 @@ public class Garage extends Model implements Runnable {
      * @param queue This param contains the queue of vehicle that are waiting.
      */
     private void carsEntering(CustomerQueue queue){
+    	Random random = new Random();
     	// Remove reservation car from queue and give a space
     	for (int i=0;i<enterSpeed;i++) {
-    		Vehicle vehicle = (ReservationCar) reservationCarQueue.removeCar();
+    		ReservationCar vehicle = (ReservationCar) reservationCarQueue.removeCar();
     	
     		if (vehicle == null) {
     			break;
     		}
     		
-    		Random random = new Random();
     		
-    		int stayTime = (int) (15 + random.nextFloat() * 10 * 60);
-    		vehicle.setStayTime(stayTime);
-    		Location freeLocation = getFirstFreeLocation(vehicle);
-    		setCarAt(freeLocation, vehicle);    				
+    		
+    		String company = vehicle.getCompany();
+    		ArrayList<Location> companyLocations = reservation.getCompanyLocations(company);
+    		
+    		for (Location companyLocation : companyLocations) {
+    			if(getCarAt(companyLocation) == null) {
+    				int stayMinutes = (int) (15+random.nextFloat() * 10 * 60);
+    				vehicle.setStayTime(stayMinutes);
+    				setCarAt(companyLocation, vehicle);
+    				break;
+    			}
+    		}
+    		
+    						
     	}
     	
         int i=0;
@@ -505,19 +514,6 @@ public class Garage extends Model implements Runnable {
             setCarAt(freeLocation, vehicle);
             i++;
         }
-    }
-    
-    /**
-     * This method will return the car on a location.
-     * 
-     * @param location of the car you want to get.
-     * @return Car the car on the location
-     */
-    public Car getCar(Location location) {
-        if (!locationIsValid(location)) {
-            return null;
-        }
-        return carLocation.get(location);
     }
 
     /**
@@ -701,7 +697,7 @@ public class Garage extends Model implements Runnable {
 	 */
 	public void setRunning(boolean b) {
 		running = b;
-	}
+	} 
 
 	/**
 	 * This method looks if the program is running.
