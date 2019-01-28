@@ -1,8 +1,10 @@
 package nl.hanze.st.parkeersimulator.model;
 
+import java.util.List;
 import java.util.Random;
+import java.util.*;
+import java.awt.*;
 
-import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.Model;
 
 public class Garage extends Model {
@@ -16,10 +18,15 @@ public class Garage extends Model {
     private int numberOfPlaces;
     private int numberOfOpenSpots;
     
+    private int placesForSubscriptionCars = 120;
+    
     private CustomerQueue entranceCarQueue;
     private CustomerQueue entrancePassQueue;
     private CustomerQueue paymentCarQueue;
+    private CustomerQueue reservationCarQueue;
     private CustomerQueue exitCarQueue;
+    
+    private Reservation reservation;
     
     private int day = 0;
     private int hour = 0;
@@ -38,18 +45,56 @@ public class Garage extends Model {
     int paymentSpeed = 7; // number of cars that can pay per minute
     int exitSpeed = 5; // number of cars that can leave per minute
 
+    int reservationChance = 8; // x in 1 change a reservation
+    int amountOfReservationCars = 0; 
+    
+    private static HashMap<Location, Car> carLocation;
     
 	public Garage(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
 		entranceCarQueue = new CustomerQueue();
         entrancePassQueue = new CustomerQueue();
         paymentCarQueue = new CustomerQueue();
+        reservationCarQueue = new CustomerQueue();
         exitCarQueue = new CustomerQueue();
         
 		this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
-        this.numberOfOpenSpots =numberOfFloors*numberOfRows*numberOfPlaces;
+        this.numberOfOpenSpots = numberOfFloors*numberOfRows*numberOfPlaces;
 		vehicles = new Vehicle[numberOfFloors][numberOfRows][numberOfPlaces];
+		
+		/**
+		 * Makes a new reservation - parking garage
+		 * Can be filled with companies
+		 */
+		this.reservation = new Reservation();
+		
+		ArrayList<Location> locations = new ArrayList<>();
+		locations = getFirst10Spots(locations, this.numberOfFloors, this.numberOfPlaces);
+		
+		reservation.makeReservation(locations, "Shell inc");
+		reservation.setColor("Shell inc", Color.GREEN);
+		
+		reservation.makeReservation(locations, "Hope for paws");
+		reservation.setColor("Hope for paws", Color.YELLOW);
+		
+		carLocation = new HashMap<>();
+        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+            for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    carLocation.put(location,null);
+                }
+            }
+        }
+	}
+	
+	public ArrayList<Location> getFirst10Spots(ArrayList<Location> locations, int floors, int rows) {
+		for (int i=0;i<31;i++) {
+			locations.add(new Location(floors-1, rows-2, i));
+		}
+		
+		return locations;
 	}
 	
 	public void start() {
@@ -106,6 +151,7 @@ public class Garage extends Model {
 
     private void handleEntrance(){
     	carsArriving();
+    	carsEntering(reservationCarQueue);
     	carsEntering(entrancePassQueue);
     	carsEntering(entranceCarQueue);  	
     }
@@ -121,7 +167,6 @@ public class Garage extends Model {
         // Update the car park view.
         notifyView();	
     }
-    
     
 	public Vehicle getCarAt(Location location) {
         if (!locationIsValid(location)) {
@@ -158,15 +203,26 @@ public class Garage extends Model {
         return vehicle;
     }
     
-
-    public Location getFirstFreeLocation() {
+    public Location getFirstFreeLocation(Vehicle vehicle) {
+    	int subspaces = 0;
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
+                	subspaces++;
+                	if ((vehicle instanceof SubscriptionCar)) {
+                		Location location = new Location(floor, row, place);
+                        
+                        if (getCarAt(location) == null) {
+                            return location;
+                        }
+                	}
+                	if (subspaces > placesForSubscriptionCars) {
+	                	Location location = new Location(floor, row, place);
+	                    
+	                    if (getCarAt(location) == null) {
+	                        return location;
+	                    }
+                	}
                 }
             }
         }
@@ -213,43 +269,80 @@ public class Garage extends Model {
     }
     
     private void carsArriving(){
-    	int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
-        addArrivingCars(numberOfCars, REGULAR);    	
-    	numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
-        addArrivingCars(numberOfCars, SUBSCRIPTION);
-        numberOfCars=getNumberOfCars(weekDayResArrivals, weekendResArrivals);
-        addArrivingCars(numberOfCars, RESERVATION);
+    	Random random = new Random();
+    	
+    	int reservationProbability = random.nextInt(this.reservationChance);
+    	
+    	if (reservationProbability == 0) {
+    		List<String> keys = new ArrayList<String>(reservation.getReservation().keySet());
+    		String randomCompany = keys.get(random.nextInt(reservation.getReservation().size()));
+    		
+    		reservationCarQueue.addCar(new ReservationCar(randomCompany));
+    		amountOfReservationCars ++;
+    		
+    	} else {    	
+    		int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
+    		addArrivingCars(numberOfCars, REGULAR);    	
+    		numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
+        	addArrivingCars(numberOfCars, SUBSCRIPTION);
+    	}
     }
 
     private void carsEntering(CustomerQueue queue){
+    	// Remove reservation car from queue and give a space
+    	for (int i=0;i<enterSpeed;i++) {
+    		Vehicle vehicle = (ReservationCar) reservationCarQueue.removeCar();
+    	
+    		if (vehicle == null) {
+    			break;
+    		}
+    		
+    		Random random = new Random();
+    		
+    		int stayTime = (int) (15 + random.nextFloat() * 10 * 60);
+    		vehicle.setStayTime(stayTime);
+    		Location freeLocation = getFirstFreeLocation(vehicle);
+    		setCarAt(freeLocation, vehicle);    				
+    	}
+    	
         int i=0;
         // Remove car from the front of the queue and assign to a parking space.
     	while (queue.carsInQueue()>0 && 
     			getNumberOfOpenSpots()>0 && 
     			i<enterSpeed) {
             Vehicle vehicle = queue.removeCar();
-            Location freeLocation = getFirstFreeLocation();
+            Location freeLocation = getFirstFreeLocation(vehicle);
             setCarAt(freeLocation, vehicle);
             i++;
         }
     }
-
+    
+    public Car getCar(Location location) {
+        if (!locationIsValid(location)) {
+            return null;
+        }
+        return carLocation.get(location);
+    }
+    
     private void carsReadyToLeave(){
         // Add leaving cars to the payment queue.
         Vehicle vehicle = getFirstLeavingCar();
+        
+        if (vehicle instanceof ReservationCar) {
+        	amountOfReservationCars--;
+        }
+        
         while (vehicle!=null) {
         	if (vehicle.getHasToPay()){
         		vehicle.setIsPaying(true);
 	            paymentCarQueue.addCar(vehicle);
-        	}
-        	else {
+        	} else {
         		carLeavesSpot(vehicle);
         	}
         	vehicle = getFirstLeavingCar();
         }
     }
 
-    
     private void carsPaying(){
         // Let cars pay.
     	int i=0;
@@ -297,12 +390,11 @@ public class Garage extends Model {
             	entrancePassQueue.addCar(new SubscriptionCar());
             }
             break;
-    	case RESERVATION:
-    		for (int i = 0; i < numberOfCars; i++) {
-            	entrancePassQueue.addCar(new ReservationCar());
-            }
-            break;
     	}
+    }
+    
+    public Reservation getReservations() {
+        return reservation;
     }
     
     private void carLeavesSpot(Vehicle vehicle){
