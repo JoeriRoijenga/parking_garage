@@ -38,10 +38,9 @@ public class BarGraphicView extends View {
             BarGraphicImage = createImage(size.width, size.height);
         }
 		title = "Parked Cars";
-	    values = new double[]{500, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription()};
-	    labels = new String[]{"", "Regular","Subscription"};
+	    values = new double[]{ garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription()};
+	    labels = new String[]{"Regular","Subscription"};
 	    colors = new Color[]{	        
-    		Color.LIGHT_GRAY,
     		Color.red,
 	        Color.blue
 	    };
@@ -56,7 +55,8 @@ public class BarGraphicView extends View {
 	    }
 	 
 	    double minValue = 0;
-	    double maxValue = 0;
+	    double maxValue = 540;
+	    		
 	    for (int i = 0; i < values.length; i++) {
 	      if (minValue > values[i]) {
 	        minValue = values[i];
@@ -69,8 +69,11 @@ public class BarGraphicView extends View {
 	    Dimension dim = getSize();
 	    int panelWidth = dim.width;
 	    int panelHeight = dim.height;
-	    int barWidth = panelWidth / (values.length + 4);
-	 
+	    
+	    // We don't need dynamic barsize, hardcodes is fine.
+	    //int barWidth = panelWidth / (values.length + 4);
+	    
+	    int barWidth = 80;
 	    Font titleFont = new Font("Book Antiqua", Font.BOLD, 15);
 	    FontMetrics titleFontMetrics = g.getFontMetrics(titleFont);
 	 
@@ -94,7 +97,8 @@ public class BarGraphicView extends View {
 	    for (int j = 0; j < values.length; j++) {
 	      int valueP = j * barWidth + 1;
 	      int valueQ = top;
-	      int height = (int) (values[j] * scale);
+	     int height = (int) (values[j] * scale);
+
 	      if (values[j] >= 0) {
 	        valueQ += (int) ((maxValue - values[j]) * scale);
 	      } else {
@@ -103,9 +107,9 @@ public class BarGraphicView extends View {
 	      }
 	 
 	      g.setColor(colors[j]);
-	      g.fillRect(valueP, valueQ, barWidth - 2, height);
+	      g.fillRect(valueP, valueQ, barWidth, height); //3rd value used to be -2
 	      g.setColor(Color.black);
-	      g.drawRect(valueP, valueQ, barWidth - 2, height);
+	      g.drawRect(valueP, valueQ, barWidth, height);
 	 
 	      int labelWidth = labelFontMetrics.stringWidth(labels[j]);
 	      stringWidth = j * barWidth + (barWidth - labelWidth) / 2;

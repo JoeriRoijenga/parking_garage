@@ -74,6 +74,10 @@ public class Garage extends Model {
     	return numberOfOpenSpots;
     }
     
+    public int getNumberOfTotalPlaces() {
+    	return numberOfFloors * numberOfRows * numberOfPlaces;
+    }
+    
     public int getNumberOfTakenSpotsBySubscription() {
     	return numberOfTakenSpotsBySubscription;
     }
