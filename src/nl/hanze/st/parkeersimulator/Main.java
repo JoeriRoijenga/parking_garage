@@ -1,9 +1,12 @@
 package nl.hanze.st.parkeersimulator;
 
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 
 import nl.hanze.st.parkeersimulator.controller.ParkingController;
 import nl.hanze.st.parkeersimulator.controller.SliderController;
@@ -40,6 +43,8 @@ public class Main {
 		model.addView(sliderView);
 		model.addView(timeView);
 
+		
+		
 		Container contentPane = window.getContentPane();
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 		contentPane.add(parkingView);
