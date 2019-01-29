@@ -25,8 +25,6 @@ public class Garage extends Model implements Runnable {
 	 * @param SUBSCRIPTION This param contains a string object with the number used for subscription cars.
 	 */
 	private static final String SUBSCRIPTION = "2";
-
-	private static final String RESERVATION = "3";
 	
 	/**
 	 * @param vehicles This param will contain all the cars in the parking lot.
@@ -54,6 +52,12 @@ public class Garage extends Model implements Runnable {
      */
     private int numberOfOpenSpots;
     
+    private int numberOfTakenSpotsByRegular;
+    
+    private int numberOfTakenSpotsBySubscription;
+    
+    private int numberOfTakenSpotsByReservation;
+       
     private int placesForSubscriptionCars = 120;
 
     /**
@@ -118,8 +122,7 @@ public class Garage extends Model implements Runnable {
      */
     int weekDayPassArrivals= 50;
 
-    int reservationChance = 8; // x in 1 change a reservation
-    int amountOfReservationCars = 0; 
+    int reservationChance = 8; // x in 1 change a reservation 
     
     private static HashMap<Location, Car> carLocation;
     
@@ -147,9 +150,6 @@ public class Garage extends Model implements Runnable {
 
 	private int period;
 	boolean automatic = true;
-	
-	boolean menuAbout = false;
-	boolean menuSettings = false;
 	
     /**
      * Constructor
@@ -241,12 +241,36 @@ public class Garage extends Model implements Runnable {
     	return numberOfOpenSpots;
     }
     
-    public boolean getMenuAbout() {
-    	return menuAbout;
+    public int getNumberOfTakenSpotsBySubscription() {
+    	return numberOfTakenSpotsBySubscription;
     }
     
-    public void setMenuAbout(boolean show) {
-    	menuAbout = show;
+    public int getNumberOfTakenSpotsByRegular() {
+    	return numberOfTakenSpotsByRegular;
+    }
+    
+    public int getNumberOfTakenSpotsByReservation() {
+    	return numberOfTakenSpotsByReservation;
+    }
+    
+    public int getNumberOfRegularCarsEntranceQueue() {
+    	return entranceCarQueue.carsInQueue();
+    }
+    
+    public int getNumberOfSubscriptionCarsEntranceQueue() {
+    	return entrancePassQueue.carsInQueue();
+    }
+    
+    public int getNumberOfPaymentQueue() {
+    	return paymentCarQueue.carsInQueue();
+    }
+    
+    public int getNumberOfReserverationCarsQueue() {
+    	return reservationCarQueue.carsInQueue();
+    }
+    
+    public int getNumberOfExitCarsQueue() {
+    	return exitCarQueue.carsInQueue();
     }
     
 	/**
@@ -343,6 +367,14 @@ public class Garage extends Model implements Runnable {
         if (oldVehicle == null) {
             vehicles[location.getFloor()][location.getRow()][location.getPlace()] = vehicle;
             vehicle.setLocation(location);
+            
+            if (vehicle instanceof RegularCar) {
+            	numberOfTakenSpotsByRegular++;
+            } else if (vehicle instanceof SubscriptionCar) {
+            	numberOfTakenSpotsBySubscription++;
+            } else if (vehicle instanceof ReservationCar) {
+            	numberOfTakenSpotsByReservation++;
+            }            
             numberOfOpenSpots--;
             return true;
         }
@@ -365,6 +397,15 @@ public class Garage extends Model implements Runnable {
         }
         vehicles[location.getFloor()][location.getRow()][location.getPlace()] = null;
         vehicle.setLocation(null);
+        
+        if (vehicle instanceof RegularCar) {
+        	numberOfTakenSpotsByRegular--;
+        } else if (vehicle instanceof SubscriptionCar) {
+        	numberOfTakenSpotsBySubscription--;
+        } else if (vehicle instanceof ReservationCar) {
+        	numberOfTakenSpotsByReservation--;
+        }
+        
         numberOfOpenSpots++;
         return vehicle;
     }
@@ -465,9 +506,7 @@ public class Garage extends Model implements Runnable {
     		List<String> keys = new ArrayList<String>(reservation.getReservation().keySet());
     		String randomCompany = keys.get(random.nextInt(reservation.getReservation().size()));
     		
-    		reservationCarQueue.addCar(new ReservationCar(randomCompany));
-    		amountOfReservationCars ++;
-    		
+    		reservationCarQueue.addCar(new ReservationCar(randomCompany));    		
     	} else {    	
     		int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
     		addArrivingCars(numberOfCars, REGULAR);    	
@@ -523,10 +562,6 @@ public class Garage extends Model implements Runnable {
     private void carsReadyToLeave(){
         // Add leaving cars to the payment queue.
         Vehicle vehicle = getFirstLeavingCar();
-        
-        if (vehicle instanceof ReservationCar) {
-        	amountOfReservationCars--;
-        }
         
         while (vehicle!=null) {
         	if (vehicle.getHasToPay()){

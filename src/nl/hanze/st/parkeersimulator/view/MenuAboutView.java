@@ -8,13 +8,19 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class MenuAbout {
-	public MenuAbout() {
+import nl.hanze.st.mvc.Model;
+import nl.hanze.st.mvc.View;
+import nl.hanze.st.parkeersimulator.model.Garage;
+
+public class MenuAboutView {
+	private JFrame aboutFrame;
+	
+	public MenuAboutView() {
 		buildAbout();
 	}
 	
 	private void buildAbout() {
-		JFrame aboutFrame = new JFrame("About simulator");
+		aboutFrame = new JFrame("About simulator");
 		aboutFrame.setSize(500,200);
 		aboutFrame.setLayout(new GridLayout(3,3));
 		
@@ -24,9 +30,9 @@ public class MenuAbout {
 		JLabel authorLabel = new JLabel("©2018, Joeri Roijenga, Niels de Vries, Tim Perdok en Timo de Jong");
 		aboutFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowsEvent) {
-				aboutFrame.setVisible(false);;
+				aboutFrame.dispose();
 			}
-		});
+		});		
 		
 		aboutFrame.add(textLabel);
 		aboutFrame.add(versionLabel);

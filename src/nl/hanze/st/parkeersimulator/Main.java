@@ -1,7 +1,6 @@
 package nl.hanze.st.parkeersimulator;
 
-import java.awt.Container;
-import java.awt.FlowLayout;
+import java.awt.*;
 
 import javax.swing.*;
 
@@ -10,9 +9,11 @@ import nl.hanze.st.parkeersimulator.controller.ParkingController;
 import nl.hanze.st.parkeersimulator.controller.SliderController;
 import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.view.ButtonView;
+import nl.hanze.st.parkeersimulator.view.ManagementInformationView;
 import nl.hanze.st.parkeersimulator.view.MenuView;
 import nl.hanze.st.parkeersimulator.view.ParkingView;
 import nl.hanze.st.parkeersimulator.view.SliderView;
+import nl.hanze.st.parkeersimulator.view.TabsView;
 import nl.hanze.st.parkeersimulator.view.TimeView;
 
 public class Main {
@@ -32,6 +33,7 @@ public class Main {
 		SliderView sliderView = new SliderView(sliderController);
 		TimeView timeView = new TimeView();
 		JMenuBar menubar = new JMenuBar();
+		TabsView tabsView = new TabsView(model);
 		
 		window.setJMenuBar(menubar);
 		JMenu settingsMenu = new JMenu("Settings");
@@ -45,13 +47,19 @@ public class Main {
 		model.addView(buttonView);
 		model.addView(sliderView);
 		model.addView(timeView);
+		//model.addView(tabsView);
 
+		Container southPane = new Container();
+		southPane.setLayout(new BoxLayout(southPane, BoxLayout.Y_AXIS));
+		southPane.add(buttonView);
+		southPane.add(sliderView);
+		southPane.add(timeView);
+		
 		Container contentPane = window.getContentPane();
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-		contentPane.add(parkingView);
-		contentPane.add(buttonView);
-		contentPane.add(sliderView);
-		contentPane.add(timeView);
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(parkingView, BorderLayout.CENTER);
+		contentPane.add(southPane, BorderLayout.SOUTH);
+		contentPane.add(tabsView, BorderLayout.EAST);
 		
 		window.pack();
 		window.setVisible(true);

@@ -11,7 +11,8 @@ import javax.swing.JLabel;
 import nl.hanze.st.mvc.Controller;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
-import nl.hanze.st.parkeersimulator.view.MenuAbout;
+import nl.hanze.st.parkeersimulator.view.MenuAboutView;
+import nl.hanze.st.parkeersimulator.view.MenuSettingsView;
 
 public class MenuController extends Controller {
 	public static final int EVENT_ID_ABOUT = 1;
@@ -39,30 +40,13 @@ public class MenuController extends Controller {
 	protected boolean event(View view, int event_id) {
 		switch (event_id) {
 			case EVENT_ID_ABOUT:
-				garage.setMenuAbout(true);;
+				new MenuAboutView();
 				return true;
 			case EVENT_ID_SETTINGS:
-				//showSettings();
+				new MenuSettingsView();
 				return true;
 			default:
 				return false;
 		}
-	}
-
-
-	
-	private void showSettings() {
-		JFrame settingsFrame = new JFrame("Setting");
-		
-		settingsFrame.setSize(500,500);
-		settingsFrame.setLayout(new GridLayout(1,1));
-		
-		settingsFrame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent windowsEvent) {
-				settingsFrame.setVisible(false);;
-			}
-		});
-		
-		settingsFrame.setVisible(true);
 	}
 }

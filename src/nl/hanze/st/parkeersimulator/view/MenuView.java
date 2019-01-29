@@ -20,10 +20,10 @@ public class MenuView extends View {
 		JMenuItem settingsItem = new JMenuItem("Simulator settings");
 		settingsItem.addActionListener((e) -> notifyController(EVENT_ID_SETTINGS));
 		menu.add(settingsItem);
+		
 		JMenuItem aboutItem = new JMenuItem("About");
 		aboutItem.addActionListener((e) -> notifyController(EVENT_ID_ABOUT));
 		menu.add(aboutItem);
-		new MenuAbout();
 	}
 
 	@Override
