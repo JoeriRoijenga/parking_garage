@@ -213,6 +213,10 @@ public class Garage extends Model implements Runnable {
 	public int getNumberOfFloors() {
         return numberOfFloors;
     }
+	
+	public void setNumberOfFloors(int floors) {
+		numberOfFloors = floors;
+	}
 
 	/** 
 	 * This method will retrieve the number of rows per floor.

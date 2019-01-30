@@ -2,7 +2,6 @@ package nl.hanze.st.parkeersimulator.view;
 
 import static nl.hanze.st.parkeersimulator.controller.MenuController.*;
 
-import java.awt.*; 
 import javax.swing.*;
 
 import nl.hanze.st.mvc.Model;

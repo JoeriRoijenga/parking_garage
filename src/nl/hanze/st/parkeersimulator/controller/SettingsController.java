@@ -1,24 +1,27 @@
 package nl.hanze.st.parkeersimulator.controller;
 
+import java.awt.Component;
+import java.awt.im.InputContext;
+
+import java.lang.reflect.Field;
+
 import nl.hanze.st.mvc.Controller;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
-import nl.hanze.st.parkeersimulator.view.MenuAboutView;
-import nl.hanze.st.parkeersimulator.view.MenuSettingsView;
 
-public class MenuController extends Controller {
-	public static final int EVENT_ID_ABOUT = 1;
-	public static final int EVENT_ID_SETTINGS = 2;
+public class SettingsController extends Controller {
+	public static final int EVENT_ID_SAVE = 1;
 	
 	private Garage garage;
+	
 	/**
 	 * Constructor
 	 * 
 	 * @param model This param contains the Garage model.
 	 */
-	public MenuController(Garage model) {
+	public SettingsController(Garage model) {
 		super(model);
-		garage = model;
+		garage = (Garage) model;
 	}
 
 	/**
@@ -31,11 +34,16 @@ public class MenuController extends Controller {
 	@Override
 	protected boolean event(View view, int event_id) {
 		switch (event_id) {
-			case EVENT_ID_ABOUT:
-				new MenuAboutView();
-				return true;
-			case EVENT_ID_SETTINGS:
-				new MenuSettingsView(garage).setController(new SettingsController(garage));
+			case EVENT_ID_SAVE:
+				//garage.setNumberOfFloors(view.getClass().getDeclaredField(""));
+				try {
+					Field[] a = view.getClass().getDeclaredFields();
+					Field[] b = a[0].getClass().getDeclaredFields();
+					
+					System.out.println();
+				} catch (Exception e) {
+					
+				}
 				return true;
 			default:
 				return false;
