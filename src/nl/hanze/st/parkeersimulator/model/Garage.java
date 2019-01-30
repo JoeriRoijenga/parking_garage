@@ -98,7 +98,12 @@ public class Garage extends Model implements Runnable {
      * @param minute This param contains the minute of the hour.
      */
     private int minute = 0;
-
+    
+    /**
+	 * @param week This param contains the week as an array.
+	 */
+	private String[] dayArray = { "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag" };
+    
     /**
      * @param tickPause This param contains the pause between every tick.
      */
@@ -149,6 +154,8 @@ public class Garage extends Model implements Runnable {
     private int period;
     
     boolean automatic = true;
+    
+    int defaultQueueSize = 10;
     /**
      * Constructor
      *
@@ -157,11 +164,11 @@ public class Garage extends Model implements Runnable {
      * @param numberOfPlaces This param contains the number of places per row.
      */
     public Garage(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
-        entranceCarQueue = new CustomerQueue();
-        entrancePassQueue = new CustomerQueue();
-        paymentCarQueue = new CustomerQueue();
-        reservationCarQueue = new CustomerQueue();
-        exitCarQueue = new CustomerQueue();
+        entranceCarQueue = new CustomerQueue(defaultQueueSize);
+        entrancePassQueue = new CustomerQueue(defaultQueueSize);
+        paymentCarQueue = new CustomerQueue(defaultQueueSize);
+        reservationCarQueue = new CustomerQueue(defaultQueueSize);
+        exitCarQueue = new CustomerQueue(defaultQueueSize);
 
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
@@ -190,6 +197,20 @@ public class Garage extends Model implements Runnable {
 
         reservation.makeReservation(locations, "KPN", 10);
         reservation.setColor("KPN", Color.GREEN);
+    }
+    
+    public void handleMood(CustomerQueue customerQueue) {
+    	LinkedList<Vehicle> queue = customerQueue.getQueue();
+    	
+    	Iterator<Vehicle> itr = queue.iterator();
+    	while (itr.hasNext()) {
+    		Vehicle vehicle = (Vehicle) itr.next();
+    		
+    		if (vehicle.getMoodLevel() <= 0) {
+    			itr.remove();
+    		}
+    		vehicle.decreaseMoodLevel();
+    	}
     }
     
 	/** 
@@ -432,6 +453,10 @@ public class Garage extends Model implements Runnable {
         carsEntering(reservationCarQueue);
         carsEntering(entrancePassQueue);
         carsEntering(entranceCarQueue);
+        
+        handleMood(entrancePassQueue);
+		handleMood(entranceCarQueue);
+		handleMood(reservationCarQueue);
     }
 
     /**
@@ -510,8 +535,8 @@ public class Garage extends Model implements Runnable {
     public ArrayList<Location> getReservationSpots(ArrayList<Location> locations, int floors, int rows, int maxSpots) {
         int amountOfSpots = maxSpots;
 
-        for (int r=rows; r>0; r--) {
-            for (int p=0;p<30;p++) {
+        for (int r = rows; r > 0; r--) {
+            for (int p = 0; p < 30; p++) {
                 amountOfSpots--;
                 if (amountOfSpots <= 0) {
                     break;
@@ -769,6 +794,11 @@ public class Garage extends Model implements Runnable {
      */
     private int getNumberOfCars(int weekDay, int weekend){
         Random random = new Random();
+        float minuteFloat = minute;
+        float minutePct = (minuteFloat/60);
+        float timePct = hour + minutePct;
+        
+        double rushValue = (-(timePct*timePct) + (28 * timePct))/100;
 
         // Get the average number of cars that arrive per hour.
         int averageNumberOfCarsPerHour = day < 5
@@ -777,7 +807,7 @@ public class Garage extends Model implements Runnable {
 
         // Calculate the number of cars that arrive this minute.
         double standardDeviation = averageNumberOfCarsPerHour * 0.3;
-        double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation;
+        double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation * rushValue;
         return (int)Math.round(numberOfCarsPerHour / 60);
     }
 
@@ -792,12 +822,16 @@ public class Garage extends Model implements Runnable {
         switch(type) {
             case REGULAR:
                 for (int i = 0; i < numberOfCars; i++) {
-                    entranceCarQueue.addCar(new RegularCar());
+                	if (entranceCarQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
+                		entranceCarQueue.addCar(new RegularCar());
+                	}
                 }
                 break;
             case SUBSCRIPTION:
                 for (int i = 0; i < numberOfCars; i++) {
-                    entrancePassQueue.addCar(new SubscriptionCar());
+                	if (entrancePassQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
+                		entrancePassQueue.addCar(new SubscriptionCar());
+                	}
                 }
                 break;
         }
@@ -937,4 +971,13 @@ public class Garage extends Model implements Runnable {
 
         return timeString;
     }
+    
+    /**
+	 * This method is for getting the day.
+	 * 
+	 * @return String sends back the day
+	 */
+	public String getDay() {
+		return dayArray[day];
+	}
 }

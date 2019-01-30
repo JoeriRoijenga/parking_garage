@@ -18,7 +18,13 @@ import nl.hanze.st.parkeersimulator.view.TimeView;
 
 public class Main {
 	public static void main(String[] args) {
+		
+		int i = 5;
+		double a = 2.2;
+		double f = a + i;
+		
 		JFrame window = new JFrame();
+		window.setSize(1000,1000);
 		window.setTitle("MVC Voorbeeld");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

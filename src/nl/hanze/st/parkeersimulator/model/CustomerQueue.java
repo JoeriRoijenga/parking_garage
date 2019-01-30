@@ -11,6 +11,7 @@ import java.util.*;
  * @version 0.1 (18-1-2019)
  */
 public class CustomerQueue {
+	private static int maxQueueSize;
 	/**
 	 * @param queue This param will contain a list of vehicles.
 	 */
@@ -19,8 +20,9 @@ public class CustomerQueue {
 	/**
 	 * Constructor
 	 */
-	public CustomerQueue() {
+	public CustomerQueue(int maxCarsInQueue) {
 		queue = new LinkedList<Vehicle>();
+		maxQueueSize = maxCarsInQueue;
 	}
 
 	/**
@@ -48,6 +50,14 @@ public class CustomerQueue {
 	 */
 	public void addCar(Vehicle vehicle) {
 		queue.add(vehicle);
+	}
+	
+	public LinkedList<Vehicle> getQueue() {
+		return (LinkedList<Vehicle>) queue;
+	}
+	
+	public static int getMaxQueueSize() {
+		return maxQueueSize;
 	}
 
 }

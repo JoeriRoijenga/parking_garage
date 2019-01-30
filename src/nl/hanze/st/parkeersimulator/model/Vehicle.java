@@ -28,12 +28,15 @@ public abstract class Vehicle extends Actor {
     private boolean hasToPay;
     private int stayTime;
     
+    private int moodLevel;
+    
     /**
      * Constructor
      */
 	public Vehicle() {
     	Random random = new Random();
     	int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
+    	moodLevel = random.nextInt(15) + 2;
         this.setMinutesLeft(stayMinutes);
 
 	}
@@ -115,4 +118,12 @@ public abstract class Vehicle extends Actor {
      * @return Color expected to retrieve the color.
      */
     public abstract Color getColor();
+    
+    public void decreaseMoodLevel() {
+    	moodLevel--;
+    }
+    
+    public int getMoodLevel() {
+    	return moodLevel;
+    }
 }
