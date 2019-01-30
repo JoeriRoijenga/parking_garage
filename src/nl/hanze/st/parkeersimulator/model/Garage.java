@@ -166,6 +166,10 @@ public class Garage extends Model implements Runnable {
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
         this.numberOfOpenSpots = numberOfFloors*numberOfRows*numberOfPlaces;
+       
+        this.numberOfTakenSpotsByRegular = 0;
+        this.numberOfTakenSpotsBySubscription = 0;
+        
 		vehicles = new Vehicle[numberOfFloors][numberOfRows][numberOfPlaces];
 		
 		/**
@@ -507,6 +511,7 @@ public class Garage extends Model implements Runnable {
             } else if (vehicle instanceof ReservationCar) {
             	numberOfTakenSpotsByReservation++;
             }            
+
             numberOfOpenSpots--;
             return true;
         }
@@ -529,7 +534,7 @@ public class Garage extends Model implements Runnable {
         }
         vehicles[location.getFloor()][location.getRow()][location.getPlace()] = null;
         vehicle.setLocation(null);
-        
+      
         if (vehicle instanceof RegularCar) {
         	numberOfTakenSpotsByRegular--;
         } else if (vehicle instanceof SubscriptionCar) {
@@ -539,6 +544,7 @@ public class Garage extends Model implements Runnable {
         }
         
         numberOfOpenSpots++;
+        
         return vehicle;
     }
 

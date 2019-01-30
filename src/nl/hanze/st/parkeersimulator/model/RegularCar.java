@@ -14,7 +14,7 @@ public class RegularCar extends Car {
 	/**
 	 * @param color This param contains the color of the regular car.
 	 */
-	private static final Color color = Color.RED;
+	public static final Color color = Color.RED;
 
 	/**
 	 * Constructor

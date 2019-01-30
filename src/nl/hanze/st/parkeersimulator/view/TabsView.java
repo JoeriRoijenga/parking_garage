@@ -14,15 +14,28 @@ import nl.hanze.st.mvc.View;
 
 public class TabsView extends JTabbedPane {
 	ManagementInformationView managementInformationView = new ManagementInformationView();
+	PieGraphicView pieGraphicView = new PieGraphicView();
+	BarGraphicView barGraphicView = new BarGraphicView();
 	
 	public TabsView(Model model) {					
-		JComponent panel1 = new JPanel();
+		JComponent managementInfo = new JPanel();
+		JComponent pieGraphic = new JPanel();
+		JComponent barGraphic = new JPanel();
 		
-		panel1.add(managementInformationView);
-		addTab("Tab 1", null, panel1, "Management Information");
+		managementInfo.add(managementInformationView);
+		addTab("Management", null, managementInfo, "Management Information");
 		
+		pieGraphic.add(pieGraphicView);
+		addTab("Pie Graphic", null, pieGraphic, "Pie Graphic");
+
+		barGraphic.add(barGraphicView);
+		addTab("Bar Graphic", null, barGraphic, "Bar Graphic");
+
 		model.addView(managementInformationView);
+		model.addView(pieGraphicView);
+		model.addView(barGraphicView);
 		
-        setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        
+		setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
 }
