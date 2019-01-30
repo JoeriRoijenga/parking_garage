@@ -20,7 +20,8 @@ public class ButtonView extends View {
 	public JPanel buttonPanel;
 
 	public ButtonView() {
-
+		this.setPreferredSize(new Dimension(500,100));
+		this.setBackground(Color.YELLOW);
 		
 		buttonPanel = new JPanel();
 		buttonPanel.setBackground(Color.YELLOW);

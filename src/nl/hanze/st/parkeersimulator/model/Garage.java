@@ -133,7 +133,7 @@ public class Garage extends Model implements Runnable {
 	 *                            subscription car arrivals in the weekends per
 	 *                            hour.
 	 */
-	int weekDayPassArrivals = 1000;
+	int weekDayPassArrivals = 100;
 
 	int reservationChance = 8; // x in 1 change a reservation
 	int amountOfReservationCars = 0;
@@ -145,7 +145,7 @@ public class Garage extends Model implements Runnable {
 	 *                            subscription car arrivals in the weekends per
 	 *                            hour.
 	 */
-	int weekendPassArrivals = 5;
+	int weekendPassArrivals = 50;
 
 	/**
 	 * @param enterspeed This param will contain the speed of vehicles entering.
@@ -282,24 +282,7 @@ public class Garage extends Model implements Runnable {
 		return numberOfOpenSpots;
 	}
 
-	/**
-	 * This method will run the simulation of the garage.
-	 */
-	public void tickThread() {
-		while (true) {
-			advanceTime();
-			handleExit();
-			updateViews();
-			// Pause.
-			try {
-				Thread.sleep(tickPause);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			handleEntrance();
 
-		}
-	}
 
 	private void printDebug() {
 		System.out.println("entranceCarQueue" + entranceCarQueue.carsInQueue());
@@ -334,17 +317,16 @@ public class Garage extends Model implements Runnable {
 	 * vehicles.
 	 */
 	private void handleEntrance() {
-		
+
 		carsArriving();
 		carsEntering(reservationCarQueue);
 		carsEntering(entrancePassQueue);
 		carsEntering(entranceCarQueue);
-		
+
 		handleMood(entrancePassQueue);
 		handleMood(entranceCarQueue);
 		handleMood(reservationCarQueue);
-		
-		
+
 	}
 
 	/**
@@ -386,9 +368,11 @@ public class Garage extends Model implements Runnable {
 	 * @return boolean This return will return a success or a fail.
 	 */
 	public boolean setCarAt(Location location, Vehicle vehicle) {
+
 		if (!locationIsValid(location)) {
 			return false;
 		}
+
 		Vehicle oldVehicle = getCarAt(location);
 		if (oldVehicle == null) {
 			vehicles[location.getFloor()][location.getRow()][location.getPlace()] = vehicle;
@@ -499,6 +483,7 @@ public class Garage extends Model implements Runnable {
 		int floor = location.getFloor();
 		int row = location.getRow();
 		int place = location.getPlace();
+
 		if (floor < 0 || floor >= numberOfFloors || row < 0 || row > numberOfRows || place < 0
 				|| place > numberOfPlaces) {
 			return false;
@@ -522,12 +507,15 @@ public class Garage extends Model implements Runnable {
 			amountOfReservationCars++;
 
 		} else {
+			
+
 			int numberOfCars = getNumberOfCars(weekDayArrivals, weekendArrivals);
 			addArrivingCars(numberOfCars, REGULAR);
 			numberOfCars = getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
 			addArrivingCars(numberOfCars, SUBSCRIPTION);
 		}
 	}
+
 
 	/**
 	 * This method will let the cars enter the garage.
@@ -631,13 +619,28 @@ public class Garage extends Model implements Runnable {
 	 */
 	private int getNumberOfCars(int weekDay, int weekend) {
 		Random random = new Random();
+		float minuteFloat = minute;
+		float minutePct = (minuteFloat/60);
+		float timePct = hour + minutePct;
+		
+		double rushValue = (-(timePct*timePct) + (28 * timePct))/100;
+		
+		
+		System.out.println(rushValue);
+		
 
+		
 		// Get the average number of cars that arrive per hour.
 		int averageNumberOfCarsPerHour = day < 5 ? weekDay : weekend;
 
 		// Calculate the number of cars that arrive this minute.
+		
+		
 		double standardDeviation = averageNumberOfCarsPerHour * 0.3;
-		double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation;
+		
+		double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation * rushValue;
+		
+		
 		return (int) Math.round(numberOfCarsPerHour / 60);
 	}
 
@@ -654,9 +657,7 @@ public class Garage extends Model implements Runnable {
 		case REGULAR:
 			for (int i = 0; i < numberOfCars; i++) {
 				if (entranceCarQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
-					
 
-					
 					entranceCarQueue.addCar(new RegularCar());
 				}
 			}
@@ -664,7 +665,6 @@ public class Garage extends Model implements Runnable {
 		case SUBSCRIPTION:
 			for (int i = 0; i < numberOfCars; i++) {
 				if (entrancePassQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
-					
 
 					entrancePassQueue.addCar(new SubscriptionCar());
 
@@ -709,8 +709,6 @@ public class Garage extends Model implements Runnable {
 
 		while ((running) && (i < period || automatic)) {
 
-			
-
 			advanceTime();
 
 			handleExit();
@@ -722,9 +720,8 @@ public class Garage extends Model implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
+
 			handleEntrance();
-			
 
 			if (period > 0) {
 				i++;
@@ -774,7 +771,7 @@ public class Garage extends Model implements Runnable {
 	 * @param int fps with how much to decrease the speed.
 	 */
 	public void setTickPause(int fps) {
-		tickPause = 1001 - fps;
+		tickPause = 1000 - fps;
 	}
 
 	/**
