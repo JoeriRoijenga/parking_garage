@@ -1,7 +1,6 @@
 package nl.hanze.st.parkeersimulator;
 
 import java.awt.*;
-
 import javax.swing.*;
 
 import nl.hanze.st.parkeersimulator.controller.MenuController;
@@ -9,7 +8,6 @@ import nl.hanze.st.parkeersimulator.controller.ParkingController;
 import nl.hanze.st.parkeersimulator.controller.SliderController;
 import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.view.ButtonView;
-import nl.hanze.st.parkeersimulator.view.ManagementInformationView;
 import nl.hanze.st.parkeersimulator.view.MenuView;
 import nl.hanze.st.parkeersimulator.view.ParkingView;
 import nl.hanze.st.parkeersimulator.view.SliderView;
@@ -18,7 +16,16 @@ import nl.hanze.st.parkeersimulator.view.TimeView;
 
 public class Main {
 	public static void main(String[] args) {
+		
+		int i = 5;
+		double a = 2.2;
+		double f = a + i;
+		
+		System.out.println(f);
+		
+		
 		JFrame window = new JFrame();
+		window.setSize(1000,1000);
 		window.setTitle("MVC Voorbeeld");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

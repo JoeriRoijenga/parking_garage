@@ -2,6 +2,8 @@ package nl.hanze.st.parkeersimulator.view;
 
 import java.awt.*; 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
@@ -33,6 +35,8 @@ public class ParkingView extends View {
      */
     public ParkingView() {
         size = new Dimension(0, 0);
+        this.setPreferredSize(new Dimension(500,500));
+        super.setBorder(new BevelBorder(BevelBorder.LOWERED));
     }
 
     /**

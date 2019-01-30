@@ -22,16 +22,19 @@ public class SliderView extends View {
 	private JPanel sliderPanel;
 
 	private JSlider slider;
+	
+	private JLabel sliderHeader;
 
 	private SliderController changeListener;
 
 	
 	public SliderView(SliderController listener) {
 		this.changeListener = listener;
-		
+
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		
+		
 		sliderPanel = new JPanel();
 		sliderPanel.setBackground(Color.YELLOW);
 		add(sliderPanel);
@@ -40,13 +43,14 @@ public class SliderView extends View {
 		
 		slider = new JSlider(JSlider.HORIZONTAL, 0, 1000, 50);
 		slider.setValue(750);
-		slider.setPreferredSize(new Dimension(1000, 50));
+		slider.setPreferredSize(new Dimension(500, 50));
 		
 
 		 Hashtable<Integer, JLabel> labels = new Hashtable<>();
-	        labels.put(0, new JLabel("1000 ms"));
-	        labels.put(500, new JLabel("500 ms"));
-	        labels.put(1000, new JLabel("1 ms"));
+	        labels.put(0, new JLabel("Traag"));
+	        labels.put(500, new JLabel("Matig"));
+	        labels.put(1000, new JLabel("Snel"));
+	        
 	        slider.setLabelTable(labels);
 	        slider.setPaintLabels(true);
 	        slider.setBackground(Color.YELLOW);

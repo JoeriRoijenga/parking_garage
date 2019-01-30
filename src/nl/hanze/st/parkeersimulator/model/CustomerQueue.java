@@ -7,10 +7,11 @@ import java.util.*;
  * 
  * This class will contain the queue properties.
  * 
- * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries.
  * @version 0.1 (18-1-2019)
  */
 public class CustomerQueue {
+	private static int maxQueueSize;
 	/**
 	 * @param queue This param will contain a list of vehicles.
 	 */
@@ -19,8 +20,9 @@ public class CustomerQueue {
 	/**
 	 * Constructor
 	 */
-	public CustomerQueue() {
+	public CustomerQueue(int maxCarsInQueue) {
 		queue = new LinkedList<Vehicle>();
+		maxQueueSize = maxCarsInQueue;
 	}
 
 	/**
@@ -31,7 +33,7 @@ public class CustomerQueue {
 	public int carsInQueue() {
 		return queue.size();
 	}
-	
+
 	/**
 	 * This method will remove the car from the queue.
 	 * 
@@ -49,5 +51,15 @@ public class CustomerQueue {
 	public void addCar(Vehicle vehicle) {
 		queue.add(vehicle);
 	}
+
+	public LinkedList<Vehicle> getQueue() {
+		return (LinkedList<Vehicle>) queue;
+	}
+
+	public static int getMaxQueueSize() {
+		return maxQueueSize;
+	}
+
+
 
 }
