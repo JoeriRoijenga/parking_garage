@@ -14,6 +14,7 @@ public class PieGraphicView extends View {
 	private Dimension size;
 	private double degreeRegular;
 	private double degreeSubscription;
+	private double degreeReservation;
 	
 	/**
      * Constructor for objects of class CarPark
@@ -40,14 +41,16 @@ public class PieGraphicView extends View {
 		
 		int regular = garage.getNumberOfTakenSpotsByRegular();
 		int subscription = garage.getNumberOfTakenSpotsBySubscription();
-		int total = subscription + regular;
+		int reservation = garage.getNumberOfTakenSpotsByReservation();
+		int total = subscription + regular + reservation;
 		
 		double percentageRegular = ((double) regular / (double) total) * 100;
 		double percentageSubscription = ((double) subscription / (double) total) * 100;
+		double percentageReservation = ((double) reservation / (double) total) * 100;
 		
 		degreeRegular = Math.round(360 * (percentageRegular / 100)); // 253.0
 		degreeSubscription = Math.round(360 * (percentageSubscription / 100)); // 253.0				
-		
+		degreeReservation = Math.round(360 * (percentageReservation / 100)); // 253.0
 		repaint();
 	}
 	
@@ -69,6 +72,13 @@ public class PieGraphicView extends View {
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
 	    g2.setColor(SubscriptionCar.color);
+	    g2.fill(arc);
+	    
+	    arc.setAngleStart(degreeSubscription);
+	    arc.setAngleExtent(degreeReservation);
+	    g2.setColor(Color.white);
+	    g2.draw(arc);
+	    g2.setColor(Color.green);
 	    g2.fill(arc);
 	}
 	

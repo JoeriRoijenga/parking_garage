@@ -38,12 +38,13 @@ public class BarGraphicView extends View {
             BarGraphicImage = createImage(size.width, size.height);
         }
 		title = "Parked Cars";
-	    values = new double[]{500, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription()};
-	    labels = new String[]{"", "Regular","Subscription"};
+	    values = new double[]{500, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription(), garage.getNumberOfTakenSpotsByReservation()};
+	    labels = new String[]{"", "Regular","Subscription", "Reservation"};
 	    colors = new Color[]{	        
     		Color.LIGHT_GRAY,
     		Color.red,
-	        Color.blue
+	        Color.blue,
+	        Color.green
 	    };
 	    
 		repaint();
