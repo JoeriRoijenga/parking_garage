@@ -1,5 +1,6 @@
 package nl.hanze.st.mvc;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
@@ -10,7 +11,7 @@ import javax.swing.JPanel;
  * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
  * @version 0.1 (18-1-2019)
  */
-public abstract class View extends JPanel {
+public abstract class View extends JPanel {	
 	/**
 	 * @param controller This param contains the controller that's used with the view.
 	 */

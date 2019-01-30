@@ -20,8 +20,6 @@ public class ButtonView extends View {
 	public JPanel buttonPanel;
 
 	public ButtonView() {
-
-		
 		buttonPanel = new JPanel();
 		buttonPanel.setBackground(Color.YELLOW);
 		add(buttonPanel);
@@ -37,7 +35,6 @@ public class ButtonView extends View {
 		buttonPanel.add(offButton);
 		offButton.setEnabled(false);
 
-
 		periodButton = new JButton("Uur vooruit");
 		periodButton.setPreferredSize(new Dimension(200, 80));
 		periodButton.addActionListener((e) -> notifyController(EVENT_ID_HOUR));
@@ -47,11 +44,6 @@ public class ButtonView extends View {
 		tickButton.setPreferredSize(new Dimension(200, 80));
 		tickButton.addActionListener((e) -> notifyController(EVENT_ID_TICK));
 		buttonPanel.add(tickButton);
-		
-
-
-		;
-
 	}
 
 
@@ -63,15 +55,11 @@ public class ButtonView extends View {
 			offButton.setEnabled(true);
 			periodButton.setEnabled(false);
 			tickButton.setEnabled(false);
-			
 		} else {
 			onButton.setEnabled(true);
 			offButton.setEnabled(false);
 			periodButton.setEnabled(true);
 			tickButton.setEnabled(true);
-			
 		}
-
 	}
-
 }
