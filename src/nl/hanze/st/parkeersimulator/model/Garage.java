@@ -475,7 +475,7 @@ public class Garage extends Model implements Runnable {
             }
 
             if (multiReservationProbability == 0) {
-                amount = 10;
+                amount = reservation.getAmountOfCars();
             }
 
             for (int i=0; i<amount; i++) {

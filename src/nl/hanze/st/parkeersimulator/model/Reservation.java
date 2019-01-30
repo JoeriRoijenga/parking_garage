@@ -16,6 +16,7 @@ public class Reservation {
 	
 	private static HashMap<String, ArrayList<Location>> reservations;
 	private static HashMap<String, Color> colors;
+	private int amountOfCars;
 	
 	/**
 	 * Constructor
@@ -47,8 +48,9 @@ public class Reservation {
 	 * @param location where the reservation will be made
 	 * @param company the name of the company that made the reservation
 	 */
-	public void makeReservation(ArrayList<Location> locations, String company) {
+	public void makeReservation(ArrayList<Location> locations, String company, int amountOfCars) {
 		reservations.put(company, locations);
+		this.amountOfCars = amountOfCars;
 	}
 	
 	/**
@@ -93,4 +95,12 @@ public class Reservation {
 	public ArrayList<Location> getCompanyLocations(String company){
         return reservations.get(company);
     }
+
+	public int getAmountOfCars() {
+		return amountOfCars;
+	}
+
+	public void setAmountOfCars(int amountOfCars) {
+		this.amountOfCars = amountOfCars;
+	}
 }
