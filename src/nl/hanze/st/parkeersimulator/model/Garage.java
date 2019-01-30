@@ -51,6 +51,12 @@ public class Garage extends Model implements Runnable {
      * @param numberOfOpenSpots This param contains the amount of open spots in the garage.
      */
     private int numberOfOpenSpots;
+    
+    private int numberOfTakenSpotsByRegular;
+    
+    private int numberOfTakenSpotsBySubscription;
+    
+    private int numberOfTakenSpotsByReservation;
 
     private int placesForSubscriptionCars = 120;
 
@@ -98,9 +104,6 @@ public class Garage extends Model implements Runnable {
      */
     private int tickPause = 100;
 
-    int weekDayResArrivals = 25; // average number of arriving cars per hour
-    int weekendResArrivals = 20; // average number of arriving cars per hour
-
     /**
      * @param weekDayArrivals This param contains the average number of regular car arrivals on weekdays per hour.
      */
@@ -144,6 +147,7 @@ public class Garage extends Model implements Runnable {
     private boolean running;
 
     private int period;
+    
     boolean automatic = true;
     /**
      * Constructor
@@ -163,6 +167,10 @@ public class Garage extends Model implements Runnable {
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
         this.numberOfOpenSpots = numberOfFloors*numberOfRows*numberOfPlaces;
+        
+        this.numberOfTakenSpotsByRegular = 0;
+        this.numberOfTakenSpotsBySubscription = 0;
+        
         vehicles = new Vehicle[numberOfFloors][numberOfRows][numberOfPlaces];
 
         /**
@@ -183,6 +191,132 @@ public class Garage extends Model implements Runnable {
         reservation.makeReservation(locations, "KPN", 10);
         reservation.setColor("KPN", Color.GREEN);
     }
+    
+	/** 
+	 * This method will retrieve the payment speed of the cars.
+	 * 
+	 * @return paymentSpeed This return will return the payment speed of the cars.
+	 */
+	public int getPaymentSpeed() {
+		return paymentSpeed;
+	}
+	
+	/** 
+	 * This method will set the payment speed of the cars.
+	 * 
+	 * @param speed This is the new payment speed for the cars.
+	 */
+	public void setPaymentSpeed(int speed) {
+		paymentSpeed = speed;
+	}
+	
+	/** 
+	 * This method will retrieve the exit speed of the cars.
+	 * 
+	 * @return exitSpeed This return will return the exit speed of the cars.
+	 */
+	public int getExitSpeed() {
+		return exitSpeed;
+	}
+	
+	/** 
+	 * This method will set the exit speed of the cars.
+	 * 
+	 * @param speed This is the new exit speed for the cars.
+	 */
+	public void setExitSpeed(int speed) {
+		exitSpeed = speed;
+	}
+	
+	/** 
+	 * This method will retrieve the weekend arrivals of regular cars.
+	 * 
+	 * @return weekendArrivals This return will return the weekend arrivals of regular cars.
+	 */
+	public int getWeekendArrivals() {
+        return weekendArrivals;
+    }
+	
+	/** 
+	 * This method will set the weekend arrivals of regular cars.
+	 * 
+	 * @param arrivals This is the new weekend arrivals of regular cars.
+	 */
+	public void setWeekendArrivals(int arrivals) {
+		weekendArrivals = arrivals;
+	}
+	
+	/** 
+	 * This method will retrieve the week day arrivals of regular cars.
+	 * 
+	 * @return weekDayArrivals This return will return the week day arrivals of regular cars.
+	 */
+	public int getWeekDayArrivals() {
+		return weekDayArrivals;
+	}
+
+	/** 
+	 * This method will set the week day arrivals of regular cars.
+	 * 
+	 * @param arrivals This is the new week day arrivals of regular cars.
+	 */
+	public void setWeekDayArrivals(int arrivals) {
+		weekDayArrivals = arrivals;
+	}
+	
+	/** 
+	 * This method will retrieve the weekend arrivals of subscription cars.
+	 * 
+	 * @return weekendPassArrivals This return will return the weekend arrivals of subscription cars.
+	 */
+	public int getWeekendPassArrivals() {
+        return weekendPassArrivals;
+    }
+	
+	/** 
+	 * This method will set the weekend arrivals of subscription cars.
+	 * 
+	 * @param arrivals This is the new weekend arrivals of subscription cars.
+	 */
+	public void setWeekendPassArrivals(int arrivals) {
+		weekendPassArrivals = arrivals;
+	}
+
+	/** 
+	 * This method will retrieve the week day arrivals of subscription cars.
+	 * 
+	 * @return weekDayPassArrivals This return will return the week day arrivals of v cars.
+	 */
+	public int getWeekDayPassArrivals() {
+		return weekDayPassArrivals;
+	}
+
+	/** 
+	 * This method will set the week day arrivals of subscription cars.
+	 * 
+	 * @param arrivals This is the new week day arrivals of subscription cars.
+	 */
+	public void setWeekDayPassArrivals(int arrivals) {
+		weekDayPassArrivals = arrivals;
+	}
+	
+	/** 
+	 * This method will retrieve the chance of cars turning cars into reservations.
+	 * 
+	 * @return reservationChance This return will return the chance of cars turning cars into reservations.
+	 */	
+	public int getReservationChance() {
+        return reservationChance;
+    }
+	
+	/** 
+	 * This method will set the chance of cars turning cars into reservations.
+	 * 
+	 * @param arrivals This is the new chance of cars turning cars into reservations.
+	 */
+	public void setReservationChance(int chance) {
+		reservationChance = chance;
+	}
 
     /**
      * This method will retrieve the number of floors.
@@ -218,6 +352,38 @@ public class Garage extends Model implements Runnable {
      */
     public int getNumberOfOpenSpots(){
         return numberOfOpenSpots;
+    }
+    
+    public int getNumberOfTakenSpotsBySubscription() {
+    	return numberOfTakenSpotsBySubscription;
+    }
+    
+    public int getNumberOfTakenSpotsByRegular() {
+    	return numberOfTakenSpotsByRegular;
+    }
+    
+    public int getNumberOfTakenSpotsByReservation() {
+    	return numberOfTakenSpotsByReservation;
+    }
+    
+    public int getNumberOfRegularCarsEntranceQueue() {
+    	return entranceCarQueue.carsInQueue();
+    }
+    
+    public int getNumberOfSubscriptionCarsEntranceQueue() {
+    	return entrancePassQueue.carsInQueue();
+    }
+    
+    public int getNumberOfPaymentQueue() {
+    	return paymentCarQueue.carsInQueue();
+    }
+    
+    public int getNumberOfReserverationCarsQueue() {
+    	return reservationCarQueue.carsInQueue();
+    }
+    
+    public int getNumberOfExitCarsQueue() {
+    	return exitCarQueue.carsInQueue();
     }
 
     /**
@@ -316,6 +482,15 @@ public class Garage extends Model implements Runnable {
         if (oldVehicle == null) {
             vehicles[location.getFloor()][location.getRow()][location.getPlace()] = vehicle;
             vehicle.setLocation(location);
+            
+            if (vehicle instanceof RegularCar) {
+            	numberOfTakenSpotsByRegular++;
+            } else if (vehicle instanceof SubscriptionCar) {
+            	numberOfTakenSpotsBySubscription++;
+            } else if (vehicle instanceof ReservationCar) {
+            	numberOfTakenSpotsByReservation++;
+            }            
+
             numberOfOpenSpots--;
             return true;
         }
@@ -324,7 +499,7 @@ public class Garage extends Model implements Runnable {
     }
 
     /**
-     * Returns the first 15 free locations in the last Row of the top floor
+     * Returns the first free locations starting in the last Row of the top floor
      *
      * @param locations Empty locations ArrayList.
      * @param floors Amount of floors.
@@ -365,6 +540,15 @@ public class Garage extends Model implements Runnable {
         }
         vehicles[location.getFloor()][location.getRow()][location.getPlace()] = null;
         vehicle.setLocation(null);
+        
+        if (vehicle instanceof RegularCar) {
+        	numberOfTakenSpotsByRegular--;
+        } else if (vehicle instanceof SubscriptionCar) {
+        	numberOfTakenSpotsBySubscription--;
+        } else if (vehicle instanceof ReservationCar) {
+        	numberOfTakenSpotsByReservation--;
+        }
+        
         numberOfOpenSpots++;
         return vehicle;
     }
@@ -480,8 +664,6 @@ public class Garage extends Model implements Runnable {
 
             for (int i=0; i<amount; i++) {
                 reservationCarQueue.addCar(new ReservationCar(randomCompany, reservation.getColor(randomCompany)));
-
-                amountOfReservationCars ++;
             }
 
         } else {
@@ -540,10 +722,6 @@ public class Garage extends Model implements Runnable {
     private void carsReadyToLeave(){
         // Add leaving cars to the payment queue.
         Vehicle vehicle = getFirstLeavingCar();
-
-        if (vehicle instanceof ReservationCar) {
-            amountOfReservationCars--;
-        }
 
         while (vehicle!=null) {
             if (vehicle.getHasToPay()){
