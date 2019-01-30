@@ -104,9 +104,6 @@ public class Garage extends Model implements Runnable {
      */
     private int tickPause = 100;
 
-    int weekDayResArrivals = 25; // average number of arriving cars per hour
-    int weekendResArrivals = 20; // average number of arriving cars per hour
-
     /**
      * @param weekDayArrivals This param contains the average number of regular car arrivals on weekdays per hour.
      */
@@ -206,6 +203,132 @@ public class Garage extends Model implements Runnable {
 	}
 	
 	/** 
+	 * This method will retrieve the payment speed of the cars.
+	 * 
+	 * @return paymentSpeed This return will return the payment speed of the cars.
+	 */
+	public int getPaymentSpeed() {
+		return paymentSpeed;
+	}
+	
+	/** 
+	 * This method will set the payment speed of the cars.
+	 * 
+	 * @param speed This is the new payment speed for the cars.
+	 */
+	public void setPaymentSpeed(int speed) {
+		paymentSpeed = speed;
+	}
+	
+	/** 
+	 * This method will retrieve the exit speed of the cars.
+	 * 
+	 * @return exitSpeed This return will return the exit speed of the cars.
+	 */
+	public int getExitSpeed() {
+		return exitSpeed;
+	}
+	
+	/** 
+	 * This method will set the exit speed of the cars.
+	 * 
+	 * @param speed This is the new exit speed for the cars.
+	 */
+	public void setExitSpeed(int speed) {
+		exitSpeed = speed;
+	}
+	
+	/** 
+	 * This method will retrieve the weekend arrivals of regular cars.
+	 * 
+	 * @return weekendArrivals This return will return the weekend arrivals of regular cars.
+	 */
+	public int getWeekendArrivals() {
+        return weekendArrivals;
+    }
+	
+	/** 
+	 * This method will set the weekend arrivals of regular cars.
+	 * 
+	 * @param arrivals This is the new weekend arrivals of regular cars.
+	 */
+	public void setWeekendArrivals(int arrivals) {
+		weekendArrivals = arrivals;
+	}
+	
+	/** 
+	 * This method will retrieve the week day arrivals of regular cars.
+	 * 
+	 * @return weekDayArrivals This return will return the week day arrivals of regular cars.
+	 */
+	public int getWeekDayArrivals() {
+		return weekDayArrivals;
+	}
+
+	/** 
+	 * This method will set the week day arrivals of regular cars.
+	 * 
+	 * @param arrivals This is the new week day arrivals of regular cars.
+	 */
+	public void setWeekDayArrivals(int arrivals) {
+		weekDayArrivals = arrivals;
+	}
+	
+	/** 
+	 * This method will retrieve the weekend arrivals of subscription cars.
+	 * 
+	 * @return weekendPassArrivals This return will return the weekend arrivals of subscription cars.
+	 */
+	public int getWeekendPassArrivals() {
+        return weekendPassArrivals;
+    }
+	
+	/** 
+	 * This method will set the weekend arrivals of subscription cars.
+	 * 
+	 * @param arrivals This is the new weekend arrivals of subscription cars.
+	 */
+	public void setWeekendPassArrivals(int arrivals) {
+		weekendPassArrivals = arrivals;
+	}
+
+	/** 
+	 * This method will retrieve the week day arrivals of subscription cars.
+	 * 
+	 * @return weekDayPassArrivals This return will return the week day arrivals of v cars.
+	 */
+	public int getWeekDayPassArrivals() {
+		return weekDayPassArrivals;
+	}
+
+	/** 
+	 * This method will set the week day arrivals of subscription cars.
+	 * 
+	 * @param arrivals This is the new week day arrivals of subscription cars.
+	 */
+	public void setWeekDayPassArrivals(int arrivals) {
+		weekDayPassArrivals = arrivals;
+	}
+	
+	/** 
+	 * This method will retrieve the chance of cars turning cars into reservations.
+	 * 
+	 * @return reservationChance This return will return the chance of cars turning cars into reservations.
+	 */	
+	public int getReservationChance() {
+        return reservationChance;
+    }
+	
+	/** 
+	 * This method will set the chance of cars turning cars into reservations.
+	 * 
+	 * @param arrivals This is the new chance of cars turning cars into reservations.
+	 */
+	public void setReservationChance(int chance) {
+		reservationChance = chance;
+	}
+		
+	/** 
 	 * This method will retrieve the number of floors.
 	 * 
 	 * @return numberOfFloors This return will return the number of floors.
@@ -214,10 +337,6 @@ public class Garage extends Model implements Runnable {
         return numberOfFloors;
     }
 	
-	public void setNumberOfFloors(int floors) {
-		numberOfFloors = floors;
-	}
-
 	/** 
 	 * This method will retrieve the number of rows per floor.
 	 * 

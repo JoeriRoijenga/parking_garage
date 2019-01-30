@@ -47,7 +47,6 @@ public class Main {
 		model.addView(buttonView);
 		model.addView(sliderView);
 		model.addView(timeView);
-		//model.addView(tabsView);
 
 		Container southPane = new Container();
 		southPane.setLayout(new BoxLayout(southPane, BoxLayout.Y_AXIS));
