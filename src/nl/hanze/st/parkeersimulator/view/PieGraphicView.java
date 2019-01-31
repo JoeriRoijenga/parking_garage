@@ -2,6 +2,8 @@ package nl.hanze.st.parkeersimulator.view;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Arrays;
+import java.util.Collections;
 
 import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.View;
@@ -33,6 +35,11 @@ public class PieGraphicView extends View {
 	 * @param degreeReservation This param contains the degrees for the reservation cars.
 	 */
 	private double degreeReservation;
+	
+	
+	private double startSubscription;
+	
+	private double startReservation;
 	
 	/**
      * Constructor for objects of class CarPark
@@ -69,6 +76,24 @@ public class PieGraphicView extends View {
 		degreeRegular = Math.round(360 * (percentageRegular / 100));
 		degreeSubscription = Math.round(360 * (percentageSubscription / 100));				
 		degreeReservation = Math.round(360 * (percentageReservation / 100));
+	
+		Double[] degree = { degreeRegular, degreeSubscription, degreeReservation };
+		
+		Double min = Collections.min(Arrays.asList(degree));
+				
+		if (min.intValue() == (int) degreeRegular) {
+			degreeRegular = degreeRegular * -1;
+		} else if (min.intValue() == (int) degreeSubscription) {
+			degreeSubscription = degreeSubscription * -1;
+			startSubscription = 0;
+			startReservation = degreeRegular;
+			
+		} else if (min.intValue() == (int) degreeReservation) {
+			degreeReservation = degreeReservation * -1;
+			startReservation = 0;
+			startSubscription = degreeRegular;
+		}
+		
 		repaint();
 	}
 	
@@ -90,15 +115,15 @@ public class PieGraphicView extends View {
 	    g2.setColor(RegularCar.color);
 	    g2.fill(arc);
 	    
-	    arc.setAngleStart(degreeRegular);
+	    arc.setAngleStart(startSubscription);
 	    arc.setAngleExtent(degreeSubscription);
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
 	    g2.setColor(SubscriptionCar.color);
 	    g2.fill(arc);
 	    
-	    arc.setAngleStart(degreeSubscription);
-	    arc.setAngleExtent(degreeReservation * -1);
+	    arc.setAngleStart(startReservation);
+	    arc.setAngleExtent(degreeReservation);
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
 	    g2.setColor(ReservationCar.colorCar);

@@ -755,9 +755,9 @@ public class Garage extends Model implements Runnable {
     public String getTime() {
         String timeString;
         if (minute < 10) {
-            timeString = "Dag: " + day + " " + hour + ":" + "0" + minute;
+            timeString = hour + ":" + "0" + minute;
         } else {
-            timeString = "Dag: " + day + " " + hour + ":" + minute;
+            timeString = hour + ":" + minute;
         }
 
         return timeString;
