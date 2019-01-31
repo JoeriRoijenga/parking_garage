@@ -10,8 +10,6 @@ import nl.hanze.st.parkeersimulator.model.RegularCar;
 import nl.hanze.st.parkeersimulator.model.SubscriptionCar;
 
 public class PieGraphicView extends View {	
-    private Image pieGraphicImage;
-	private Dimension size;
 	private double degreeRegular;
 	private double degreeSubscription;
 	private double degreeReservation;
@@ -20,7 +18,7 @@ public class PieGraphicView extends View {
      * Constructor for objects of class CarPark
      */
     public PieGraphicView() {
-    	size = new Dimension(0, 0);
+//    	size = new Dimension(0, 0);
     }
 
     /**
@@ -34,11 +32,6 @@ public class PieGraphicView extends View {
 	protected void update(Model model) {
 		Garage garage = (Garage) model;
 		
-		if (!size.equals(getSize())) {
-            size = getSize();
-            pieGraphicImage = createImage(size.width, size.height);
-        }
-		
 		int regular = garage.getNumberOfTakenSpotsByRegular();
 		int subscription = garage.getNumberOfTakenSpotsBySubscription();
 		int reservation = garage.getNumberOfTakenSpotsByReservation();
@@ -48,9 +41,9 @@ public class PieGraphicView extends View {
 		double percentageSubscription = ((double) subscription / (double) total) * 100;
 		double percentageReservation = ((double) reservation / (double) total) * 100;
 		
-		degreeRegular = Math.round(360 * (percentageRegular / 100)); // 253.0
-		degreeSubscription = Math.round(360 * (percentageSubscription / 100)); // 253.0				
-		degreeReservation = Math.round(360 * (percentageReservation / 100)); // 253.0
+		degreeRegular = Math.round(360 * (percentageRegular / 100));
+		degreeSubscription = Math.round(360 * (percentageSubscription / 100));				
+		degreeReservation = Math.round(360 * (percentageReservation / 100));
 		repaint();
 	}
 	
@@ -58,7 +51,7 @@ public class PieGraphicView extends View {
 		Graphics2D g2 = (Graphics2D) g;
 		
 		Arc2D.Double arc = new Arc2D.Double(Arc2D.PIE);
-		arc.setFrame(100, 20, 300, 300);
+		arc.setFrame(20, 20, 300, 300);
 		
 		arc.setAngleStart(0);
 	    arc.setAngleExtent(degreeRegular);
@@ -75,7 +68,7 @@ public class PieGraphicView extends View {
 	    g2.fill(arc);
 	    
 	    arc.setAngleStart(degreeSubscription);
-	    arc.setAngleExtent(degreeReservation);
+	    arc.setAngleExtent(degreeReservation * -1);
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
 	    g2.setColor(Color.green);
