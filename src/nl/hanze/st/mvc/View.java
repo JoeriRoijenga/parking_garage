@@ -1,6 +1,5 @@
 package nl.hanze.st.mvc;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**

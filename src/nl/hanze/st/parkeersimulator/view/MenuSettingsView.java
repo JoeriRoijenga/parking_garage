@@ -12,14 +12,22 @@ import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
 
+/**
+ * Class MenuSettingsView
+ * 
+ * This class is the MenuSettingsView class that will create the settings view and extends view..
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class MenuSettingsView extends View {
 	/**
-	 * Private model that contains the Garage model.
+	 * @param model This param contains the model of the garage.
 	 */
 	private Garage model;
 	
 	/**
-	 * Public JFrame that will be used for the window with the settings, public because it has to be accessible for the controller.
+	 * @param settingsFrame This param contains the frame with all the settings.
 	 */
 	public JFrame settingsFrame;
 	

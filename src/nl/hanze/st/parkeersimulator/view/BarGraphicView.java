@@ -1,55 +1,87 @@
 package nl.hanze.st.parkeersimulator.view;
 
 import java.awt.*;
-import java.awt.geom.*;
 
 import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
+import nl.hanze.st.parkeersimulator.model.RegularCar;
+import nl.hanze.st.parkeersimulator.model.ReservationCar;
+import nl.hanze.st.parkeersimulator.model.SubscriptionCar;
 
+/**
+ * Class BarGraphicView
+ * 
+ * This class is the BarGraphicView class that will extends from View.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class BarGraphicView extends View {	
-    private Image BarGraphicImage;
-	private Dimension size;
+	/**
+	 * @param values This param contains the values for the graph.
+	 */
 	private double[] values;
+	
+	/**
+	 * @param labels This param contains the labels for the graph.
+	 */
 	private String[] labels;
+	
+	/**
+	 * @param colors This param contains the colors for the graph.
+	 */
 	private Color[] colors;
+	
+	/**
+	 * @param title This param contains the title for the graph.
+	 */
 	private String title;
 	
 	/**
      * Constructor for objects of class CarPark
      */
     public BarGraphicView() {
-    	size = new Dimension(0, 0);
+    
     }
 
     /**
      * Overridden. Tell the GUI manager how big we would like to be.
+     *
+     * @return Dimension This return will return a preferred dimension.
      */
     public Dimension getPreferredSize() {
         return new Dimension(800, 400);
     }
 
+    
+    /**
+     * This method will update the data in the graph.
+     * 
+     * @param model This param contains the model with all the data.
+     */
 	@Override
 	protected void update(Model model) {
 		Garage garage = (Garage) model;
 		
-		if (!size.equals(getSize())) {
-            size = getSize();
-            BarGraphicImage = createImage(size.width, size.height);
-        }
 		title = "Parked Cars";
 	    values = new double[]{500, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription(), garage.getNumberOfTakenSpotsByReservation()};
 	    labels = new String[]{"", "Regular","Subscription", "Reservation"};
 	    colors = new Color[]{	        
     		Color.LIGHT_GRAY,
-    		Color.red,
-	        Color.blue,
-	        Color.green
+    		RegularCar.color,
+    		SubscriptionCar.color,
+    		ReservationCar.colorCar,
 	    };
 	    
 		repaint();
 	}
 	
+	/**
+	 * This method will draw the graph.
+	 * 
+	 * @param g This param contains the graphics of the view.
+	 */
 	private void drawGraphic(Graphics g) {   
 		super.paintComponent(g);
 	    if (values == null || values.length == 0) {
@@ -114,6 +146,11 @@ public class BarGraphicView extends View {
 	    }
 	}
 	
+	/**
+	 * This method will repaint the component.
+	 * 
+	 * @param g This param contains the graphics of the view.
+	 */
 	public void paintComponent(Graphics g) {
 		drawGraphic(g);
 	}	

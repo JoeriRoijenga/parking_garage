@@ -13,9 +13,19 @@ import java.util.*;
  */
 
 public class Reservation {
-	
+	/**
+	 * @param reservations This param contains a map with locations per company.
+	 */
 	private static HashMap<String, ArrayList<Location>> reservations;
+	
+	/**
+	 * @param colors This param contains a map with a color per company.
+	 */
 	private static HashMap<String, Color> colors;
+	
+	/**
+	 * @param amountOfCars This param contains the amount of cars.
+	 */
 	private int amountOfCars;
 	
 	/**
@@ -24,29 +34,14 @@ public class Reservation {
 	public Reservation() {
 		reservations = new HashMap<>();
 		colors = new HashMap<>();
-	}
-	
-	/**
-	 * This method will set the color.
-	 */
-	public void setColor(String company, Color color) {
-		colors.put(company, color);
-	}
-	
-	/**
-	 * This method will retrieve the color.
-	 * 
-	 * @return color This return will return the current color.
-	 */
-	public Color getColor(String company) {
-		return colors.get(company);
-	}
+	}	
 	
 	/**
 	 * This method adds a new reservation.
 	 * 
 	 * @param location where the reservation will be made
 	 * @param company the name of the company that made the reservation
+	 * @param amountOfCars This param contains the amount of cars.
 	 */
 	public void makeReservation(ArrayList<Location> locations, String company, int amountOfCars) {
 		reservations.put(company, locations);
@@ -77,7 +72,6 @@ public class Reservation {
 		return Locations;
 	}
 	
-	
 	/**
 	 * This method will return all the reservations.
 	 * 
@@ -90,17 +84,39 @@ public class Reservation {
 	/**
 	 * This method return the location of a company.
 	 * 
+	 * @param company This param contains the company name.
 	 * @return ArrayList locations of the company.
 	 */
 	public ArrayList<Location> getCompanyLocations(String company){
         return reservations.get(company);
     }
 
+	/**
+	 * This method will retrieve the amount of cars.
+	 * 
+	 * @return amountOfCars This return will return the amound of cars.
+	 */
 	public int getAmountOfCars() {
 		return amountOfCars;
 	}
-
-	public void setAmountOfCars(int amountOfCars) {
-		this.amountOfCars = amountOfCars;
+	
+	/**
+	 * This method will set the color.
+	 * 
+	 * @param company This param contains the company name.
+	 * @param color This param contains the color for the company.
+	 */
+	public void setColor(String company, Color color) {
+		colors.put(company, color);
+	}
+	
+	/**
+	 * This method will retrieve the color.
+	 * 
+	 * @param company This param contains the company name.
+	 * @return color This return will return the current color.
+	 */
+	public Color getColor(String company) {
+		return colors.get(company);
 	}
 }

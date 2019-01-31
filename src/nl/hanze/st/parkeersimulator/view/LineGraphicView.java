@@ -10,6 +10,14 @@ import java.awt.image.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * Class LineGraphicView
+ * 
+ * This class is the LineGraphicView class that will extends from View.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class LineGraphicView extends View {
 	private static final double SCALE_FACTOR = 0.8;
 

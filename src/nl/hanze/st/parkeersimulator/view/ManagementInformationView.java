@@ -8,14 +8,43 @@ import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
 
+/**
+ * Class ManagementInformationView
+ * 
+ * This class is the ManagementInformationView class that will extends from View.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class ManagementInformationView extends View {
+	/**
+	 * @param parkingSpots This param contains the open parking spots.
+	 * @param regularCars This param contains the amount of regular cars.
+	 * @param subsciptionCar This param contains the amount of subscription cars.
+	 * @param reservationCar This param contains the amount of reservation cars.
+	 * @param queueEntranceRegularAmount This param contains the amount of regular cars in the entrance queue.
+	 * @param queueEntranceSubscriptionAmount This param contains the amount of subscription cars in the entrance queue.
+	 * @param queueExitCarAmount This param contains the amount of cars in the exit queue.
+	 * @param queueReservationAmount This param contains the amount of reservation cars in the entrance queue.
+	 * @param queuePaymentAmount This param contains the amount of cars in the payment queue.
+	 */
 	private int parkingSpots, regularCars, subsciptionCar, reservationCar, queueEntranceRegularAmount, queueEntranceSubscriptionAmount, queueExitCarAmount, queueReservationAmount, queuePaymentAmount;
+	
+	/**
+	 * @param panel This param contains the panel with all the management information.
+	 */
 	private JPanel panel = new JPanel();
 	
+	/**
+	 * Constructor
+	 */
 	public ManagementInformationView() {
 		creatingOverview();
 	}
 	
+	/**
+	 * This method will create the overview.
+	 */
 	public void creatingOverview() {		
 		panel.setLayout(new GridLayout(0,2));
 
@@ -88,6 +117,11 @@ public class ManagementInformationView extends View {
 		add(panel);
 	}
 
+	/**
+	 * This method will update the information.
+	 * 
+	 * @param model This param contains the model thats used in the view.
+	 */
 	@Override
 	protected void update(Model model) {
 		Garage garage = (Garage) model;
@@ -106,7 +140,5 @@ public class ManagementInformationView extends View {
 		
 		panel.removeAll();
 		creatingOverview();
-	}
-	
-	
+	}	
 }

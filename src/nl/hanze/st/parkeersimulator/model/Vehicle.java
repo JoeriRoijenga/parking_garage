@@ -26,6 +26,10 @@ public abstract class Vehicle extends Actor {
      * @param hasToPay This param contains a boolean if someone has to pay.
      */
     private boolean hasToPay;
+    
+    /**
+     * 
+     */
     private int stayTime;
     
     private int moodLevel;

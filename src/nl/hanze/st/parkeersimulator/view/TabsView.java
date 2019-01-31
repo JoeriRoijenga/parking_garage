@@ -1,22 +1,39 @@
 package nl.hanze.st.parkeersimulator.view;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import nl.hanze.st.mvc.Model;
-import nl.hanze.st.mvc.View;
 
+/**
+ * Class TabsView
+ * 
+ * This class is the TabsView class that will extends from JTabbedPane.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class TabsView extends JTabbedPane {
+	/**
+	 * @param managementInformationView This param contains the view for the management information.
+	 */
 	ManagementInformationView managementInformationView = new ManagementInformationView();
+	
+	/**
+	 * @param pieGraphicView This param contains the pie graph.
+	 */
 	PieGraphicView pieGraphicView = new PieGraphicView();
+	
+	/**
+	 * @param barGraphicView This param contains the bar graph.
+	 */
 	BarGraphicView barGraphicView = new BarGraphicView();
 	
+	/**
+	 * Constructor
+	 * This constructor builds the tabs.
+	 * 
+	 * @param model This param contains the model that's in use.
+	 */
 	public TabsView(Model model) {					
 		JComponent managementInfo = new JPanel();
 		JComponent pieGraphic = new JPanel();
@@ -35,7 +52,6 @@ public class TabsView extends JTabbedPane {
 		model.addView(pieGraphicView);
 		model.addView(barGraphicView);
 		
-        
 		setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
 }

@@ -9,14 +9,26 @@ import nl.hanze.st.parkeersimulator.controller.ParkingController;
 import nl.hanze.st.parkeersimulator.controller.SliderController;
 import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.view.ButtonView;
-import nl.hanze.st.parkeersimulator.view.ManagementInformationView;
 import nl.hanze.st.parkeersimulator.view.MenuView;
 import nl.hanze.st.parkeersimulator.view.ParkingView;
 import nl.hanze.st.parkeersimulator.view.SliderView;
 import nl.hanze.st.parkeersimulator.view.TabsView;
 import nl.hanze.st.parkeersimulator.view.TimeView;
 
+/**
+ * Class Main
+ * 
+ * This class is the main class that we will be used to run the entire program.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class Main {
+	/**
+	 * This method main will be the first method to run the entire program.
+	 * 
+	 * @param args This param has the args that you can give to the program.
+	 */
 	public static void main(String[] args) {
 		
 		int i = 5;

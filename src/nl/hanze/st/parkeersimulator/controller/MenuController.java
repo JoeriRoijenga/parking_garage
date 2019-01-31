@@ -6,11 +6,30 @@ import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.view.MenuAboutView;
 import nl.hanze.st.parkeersimulator.view.MenuSettingsView;
 
+/**
+ * Class MenuController
+ * 
+ * This class is the MenuController class that extends the parent controller.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class MenuController extends Controller {
+	/**
+	 * This constant param has the event id for the about.
+	 */
 	public static final int EVENT_ID_ABOUT = 1;
-	public static final int EVENT_ID_SETTINGS = 2;
 	
+	/**
+	 * This constant param has the event id for the settings.
+	 */
+	public static final int EVENT_ID_SETTINGS = 2;
+
+	/**
+	 * This param has the model of the Garage.
+	 */
 	private Garage garage;
+	
 	/**
 	 * Constructor
 	 * 

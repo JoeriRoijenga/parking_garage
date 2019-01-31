@@ -1,25 +1,34 @@
 package nl.hanze.st.parkeersimulator.controller;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.im.InputContext;
-
-import java.lang.reflect.Field;
-import java.util.Map;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import nl.hanze.st.mvc.Controller;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.view.MenuSettingsView;
 
+/**
+ * Class SettingsController
+ * 
+ * This class is the SettingsController class that extends the parent controller.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class SettingsController extends Controller {
+	/**
+	 * This constant param has the event id for the save.
+	 */	
 	public static final int EVENT_ID_SAVE = 1;
 	
+	/**
+	 * This param has the model of the Garage.
+	 */
 	private Garage garage;
+	
+	/**
+	 * This param contains the frame of the settings.
+	 */
 	private JFrame settingsView;
 	
 	/**

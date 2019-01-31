@@ -1,17 +1,7 @@
 package nl.hanze.st.parkeersimulator.controller;
 
-import java.awt.Button;
-import java.awt.Component;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import nl.hanze.st.mvc.Controller;
-import nl.hanze.st.mvc.View;
+import nl.hanze.st.mvc.*;
 import nl.hanze.st.parkeersimulator.model.Garage;
-import nl.hanze.st.parkeersimulator.view.ButtonView;
 
 /**
  * Class ParkingController
@@ -22,11 +12,29 @@ import nl.hanze.st.parkeersimulator.view.ButtonView;
  * @version 0.1 (18-1-2019)
  */
 public class ParkingController extends Controller {
+	/**
+	 * This constant param has the event id for the start.
+	 */
 	public static final int EVENT_ID_START = 1;
+	
+	/**
+	 * This constant param has the event id for the pause.
+	 */
 	public static final int EVENT_ID_PAUSE = 2;
+	
+	/**
+	 * This constant param has the event id for the hour.
+	 */
 	public static final int EVENT_ID_HOUR = 3;
+	
+	/**
+	 * This constant param has the event id for the tick.
+	 */
 	public static final int EVENT_ID_TICK = 4;
 	
+	/**
+	 * This param has the model of the Garage.
+	 */
 	private Garage garage;
 	
 	/**

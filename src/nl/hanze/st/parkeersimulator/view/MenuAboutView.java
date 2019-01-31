@@ -12,13 +12,30 @@ import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
 
+/**
+ * Class MenuAboutView
+ * 
+ * This class is the MenuAboutView class that will create the about view.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class MenuAboutView {
+	/**
+	 * @param aboutFrame This param contains the frame with the about information.
+	 */
 	private JFrame aboutFrame;
 	
+	/**
+	 * Constructor
+	 */
 	public MenuAboutView() {
 		buildAbout();
 	}
 	
+	/**
+	 * This method will create the about view.
+	 */
 	private void buildAbout() {
 		aboutFrame = new JFrame("About simulator");
 		aboutFrame.setSize(500,200);

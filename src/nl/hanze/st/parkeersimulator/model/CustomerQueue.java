@@ -11,7 +11,12 @@ import java.util.*;
  * @version 0.1 (18-1-2019)
  */
 public class CustomerQueue {
+	
+	/**
+	 * @param maxQueueSize This param is a shared int with the maximum queue size.
+	 */
 	private static int maxQueueSize;
+	
 	/**
 	 * @param queue This param will contain a list of vehicles.
 	 */
@@ -52,10 +57,20 @@ public class CustomerQueue {
 		queue.add(vehicle);
 	}
 	
+	/**
+	 * This method will return the collection with all the vehicles.
+	 * 
+	 * @return This return will return the collection with all the vehicles.
+	 */
 	public LinkedList<Vehicle> getQueue() {
 		return (LinkedList<Vehicle>) queue;
 	}
 	
+	/**
+	 * This method will return the maxQueueSize.
+	 * 
+	 * @return maxQueueSize This return will return the maxQueueSize.
+	 */
 	public static int getMaxQueueSize() {
 		return maxQueueSize;
 	}

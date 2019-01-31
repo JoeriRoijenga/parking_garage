@@ -7,18 +7,38 @@ import nl.hanze.st.mvc.Model;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
 import nl.hanze.st.parkeersimulator.model.RegularCar;
+import nl.hanze.st.parkeersimulator.model.ReservationCar;
 import nl.hanze.st.parkeersimulator.model.SubscriptionCar;
 
+/**
+ * Class PieGraphicView
+ * 
+ * This class is the PieGraphicView class that will extends from View.
+ * 
+ * @author Timo de Jong, Joeri Roijenga, Tim Perdok, Niels de Vries. 
+ * @version 0.1 (18-1-2019)
+ */
 public class PieGraphicView extends View {	
+	/**
+	 * @param degreeRegular This param contains the degrees for the regular cars.
+	 */
 	private double degreeRegular;
+	
+	/**
+	 * @param degreeSubscription This param contains the degrees for the subscription cars.
+	 */
 	private double degreeSubscription;
+	
+	/**
+	 * @param degreeReservation This param contains the degrees for the reservation cars.
+	 */
 	private double degreeReservation;
 	
 	/**
      * Constructor for objects of class CarPark
      */
     public PieGraphicView() {
-//    	size = new Dimension(0, 0);
+
     }
 
     /**
@@ -28,6 +48,11 @@ public class PieGraphicView extends View {
         return new Dimension(800, 400);
     }
 
+    /**
+     * This method will update the information for the graph.
+     * 
+     * @param model This param contains the model that's in use for the view.
+     */
 	@Override
 	protected void update(Model model) {
 		Garage garage = (Garage) model;
@@ -47,6 +72,11 @@ public class PieGraphicView extends View {
 		repaint();
 	}
 	
+	/**
+	 * This method will draw the graph.
+	 * 
+	 * @param g This param contains the graphics of the view.
+	 */
 	private void drawGraphic(Graphics g) {   
 		Graphics2D g2 = (Graphics2D) g;
 		
@@ -71,10 +101,15 @@ public class PieGraphicView extends View {
 	    arc.setAngleExtent(degreeReservation * -1);
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
-	    g2.setColor(Color.green);
+	    g2.setColor(ReservationCar.colorCar);
 	    g2.fill(arc);
 	}
 	
+	/**
+	 * This method will repaint the graph.
+	 * 
+	 * @param g This param contains the graphics for the view.
+	 */
 	public void paintComponent(Graphics g) {
 		drawGraphic(g);
 	}	

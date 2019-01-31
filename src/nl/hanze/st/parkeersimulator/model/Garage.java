@@ -31,7 +31,6 @@ public class Garage extends Model implements Runnable {
      */
     private Vehicle[][][] vehicles;
 
-
     /**
      * @param numberOfFloors This param contains all the floors of the parking lot.
      */
@@ -52,12 +51,24 @@ public class Garage extends Model implements Runnable {
      */
     private int numberOfOpenSpots;
     
+    /**
+     * @param numberOfTakenSpotsByRegular This param contains the amount of taken spots by regular cars in the garage.
+     */
     private int numberOfTakenSpotsByRegular;
     
+    /**
+     * @param numberOfTakenSpotsBySubscription This param contains the amount of taken spots by subscription cars in the garage.
+     */
     private int numberOfTakenSpotsBySubscription;
     
+    /**
+     * @param numberOfTakenSpotsByReservation This param contains the amount of taken spots by reservation cars in the garage.
+     */
     private int numberOfTakenSpotsByReservation;
 
+    /**
+     * @param placesForSubscriptionCars This param contains the amount of spots for the subscription cars in the garage.
+     */
     private int placesForSubscriptionCars = 120;
 
     /**
@@ -75,8 +86,14 @@ public class Garage extends Model implements Runnable {
      */
     private CustomerQueue paymentCarQueue;
 
+    /**
+     * @param reservationCarQueue This param contains the queue of all the reservation cars.
+     */
     private CustomerQueue reservationCarQueue;
 
+    /**
+     * @param reservation This param contains all the reservations.
+     */
     private Reservation reservation;
 
     /**
@@ -124,15 +141,25 @@ public class Garage extends Model implements Runnable {
      */
     int weekDayPassArrivals= 50;
 
-    int multiReservationChance = 20;
-    int reservationChance = 12; // x in 1 change a reservation
-    int amountOfReservationCars = 0;
-    int maxReservationSpots = 40;
-
     /**
      * @param weekendPassArrivals this param contains the average number of subscription car arrivals in the weekends per hour.
      */
     int weekendPassArrivals = 5;
+
+    /**
+     * @param multiReservationChance This param contains a 1 on .. chance of getting multiple cars in a reservation.
+     */
+    int multiReservationChance = 20;
+    
+    /**
+     * @param reservationChance This param contains a 1 on .. chance of becoming a reservation.
+     */
+    int reservationChance = 12; // x in 1 change a reservation
+    
+    /**
+     * @param maxReservationSpots The param contains the maximum of reserved places for the reservation cars.
+     */
+    int maxReservationSpots = 40;
 
     /**
      * @param enterspeed This param will contain the speed of vehicles entering.
@@ -149,13 +176,26 @@ public class Garage extends Model implements Runnable {
      */
     int exitSpeed = 5;
 
+    /**
+     * @param running This param contains a boolean that checks if the garage is on running.
+     */
     private boolean running;
-
+    
+    /**
+     * @param period This param contains the amount of loops / ticks that the program has to run.
+     */
     private int period;
     
+    /**
+     * @param automatic This param contains a boolean that checks if the programm keeps on running.
+     */
     boolean automatic = true;
     
+    /**
+     * @param defaultQueueSize This param contains the standard queue size.
+     */
     int defaultQueueSize = 10;
+    
     /**
      * Constructor
      *
@@ -199,6 +239,63 @@ public class Garage extends Model implements Runnable {
         reservation.setColor("KPN", Color.GREEN);
     }
     
+    /**
+     * This method will run the simulation of the garage.
+     */
+    public void tickThread() {
+        while (true) {
+            advanceTime();
+            handleExit();
+            updateViews();
+            // Pause.
+            try {
+                Thread.sleep(tickPause);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            handleEntrance();
+        }
+    }
+
+    /**
+     * This method will increment the minutes and calculate the right time.
+     */
+    private void advanceTime(){
+        // Advance the time by one minute.
+        minute++;
+        while (minute > 59) {
+            minute -= 60;
+            hour++;
+        }
+        while (hour > 23) {
+            hour -= 24;
+            day++;
+        }
+        while (day > 6) {
+            day -= 7;
+        }
+
+    }
+
+    /**
+     * This method will handle the entrance on entering and arrivals of the vehicles.
+     */
+    private void handleEntrance(){
+        carsArriving();
+        carsEntering(reservationCarQueue);
+        carsEntering(entrancePassQueue);
+        carsEntering(entranceCarQueue);
+        
+        handleMood(entrancePassQueue);
+		handleMood(entranceCarQueue);
+		handleMood(reservationCarQueue);
+    }
+    
+    /**
+     * This method handles the mood of the customer and if he wants to leave or not.
+     * 
+     * @param customerQueue This param contains all the cars in the queue.
+     */
     public void handleMood(CustomerQueue customerQueue) {
     	LinkedList<Vehicle> queue = customerQueue.getQueue();
     	
@@ -212,7 +309,531 @@ public class Garage extends Model implements Runnable {
     		vehicle.decreaseMoodLevel();
     	}
     }
+
+    /**
+     * This method will handle the exist on leaving and payments of the vehicles.
+     */
+    private void handleExit(){
+        carsReadyToLeave();
+        carsPaying();
+        carsLeaving();
+    }
+
+    /**
+     * This method will update the current view.
+     */
+    private void updateViews(){
+        tick();
+        // Update the car park view.
+        notifyView();
+    }
+
+    /**
+     * This method will remove the car at the current location.
+     *
+     * @param location This param contains the current location used.
+     * @return Vehicle This return will return the removed vehicle.
+     */
+    public Vehicle removeCarAt(Location location) {
+        if (!locationIsValid(location)) {
+            return null;
+        }
+        Vehicle vehicle = getCarAt(location);
+        if (vehicle == null) {
+            return null;
+        }
+        vehicles[location.getFloor()][location.getRow()][location.getPlace()] = null;
+        vehicle.setLocation(null);
+        
+        if (vehicle instanceof RegularCar) {
+        	numberOfTakenSpotsByRegular--;
+        } else if (vehicle instanceof SubscriptionCar) {
+        	numberOfTakenSpotsBySubscription--;
+        } else if (vehicle instanceof ReservationCar) {
+        	numberOfTakenSpotsByReservation--;
+        }
+        
+        numberOfOpenSpots++;
+        return vehicle;
+    }
+
+    /**
+     * This method contains the tick for the data, it will update all locations and cars.
+     */
+    public void tick() {
+        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+            for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    Vehicle vehicle = getCarAt(location);
+                    if (vehicle != null) {
+                        vehicle.tick();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * This method will check if the location is valid to use.
+     *
+     * @param location This param contains the location that will be used.
+     * @return boolean This param contains the boolean if a location is valid or not.
+     */
+    private boolean locationIsValid(Location location) {
+        int floor = location.getFloor();
+        int row = location.getRow();
+        int place = location.getPlace();
+        if (floor < 0 || floor >= numberOfFloors || row < 0 || row > numberOfRows || place < 0 || place > numberOfPlaces) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * This method will check if there are any cars arriving.
+     */
+    private void carsArriving(){
+        Random random = new Random();
+        int amount = 1;
+        int reservationProbability = 1;
+        int multiReservationProbability = 1;
+
+        if (reservationChance != 0) {
+            reservationProbability = random.nextInt(this.reservationChance);
+        }
+
+        if (reservationProbability == 0) {
+            List<String> keys = new ArrayList<String>(reservation.getReservation().keySet());
+            String randomCompany = keys.get(random.nextInt(reservation.getReservation().size()));
+
+            if (multiReservationChance != 0 ) {
+                multiReservationProbability = random.nextInt(this.multiReservationChance);
+            }
+
+            if (multiReservationProbability == 0) {
+                amount = reservation.getAmountOfCars();
+            }
+
+            for (int i=0; i<amount; i++) {
+                reservationCarQueue.addCar(new ReservationCar(randomCompany, reservation.getColor(randomCompany)));
+            }
+
+        } else {
+            int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
+            addArrivingCars(numberOfCars, REGULAR);
+            numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
+            addArrivingCars(numberOfCars, SUBSCRIPTION);
+        }
+    }
+
+    /**
+     * This method will let the cars enter the garage.
+     *
+     * @param queue This param contains the queue of vehicle that are waiting.
+     */
+    private void carsEntering(CustomerQueue queue){
+        Random random = new Random();
+        // Remove reservation car from queue and give a space
+        for (int i=0;i<enterSpeed;i++) {
+            ReservationCar vehicle = (ReservationCar) reservationCarQueue.removeCar();
+
+            if (vehicle == null) {
+                break;
+            }
+
+            String company = vehicle.getCompany();
+            ArrayList<Location> companyLocations = reservation.getCompanyLocations(company);
+
+            for (Location companyLocation : companyLocations) {
+                if(getCarAt(companyLocation) == null) {
+                    int stayMinutes = (int) (15+random.nextFloat() * 10 * 60);
+                    vehicle.setStayTime(stayMinutes);
+                    setCarAt(companyLocation, vehicle);
+                    break;
+                }
+            }
+
+
+        }
+
+        int i=0;
+        // Remove car from the front of the queue and assign to a parking space.
+        while (queue.carsInQueue()>0 &&
+                getNumberOfOpenSpots()>0 &&
+                i<enterSpeed) {
+            Vehicle vehicle = queue.removeCar();
+            Location freeLocation = getFirstFreeLocation(vehicle);
+            setCarAt(freeLocation, vehicle);
+            i++;
+        }
+    }
+
+    /**
+     * This method will check if there are any vehicles ready to leave.
+     */
+    private void carsReadyToLeave(){
+        // Add leaving cars to the payment queue.
+        Vehicle vehicle = getFirstLeavingCar();
+
+        while (vehicle!=null) {
+            if (vehicle.getHasToPay()){
+                vehicle.setIsPaying(true);
+                paymentCarQueue.addCar(vehicle);
+            } else {
+                carLeavesSpot(vehicle);
+            }
+            vehicle = getFirstLeavingCar();
+        }
+    }
+
+    /**
+     * This method will check if there are any vehicles paying.
+     */
+    private void carsPaying(){
+        // Let cars pay.
+        int i=0;
+        while (paymentCarQueue.carsInQueue()>0 && i < paymentSpeed){
+            Vehicle vehicle = paymentCarQueue.removeCar();
+            carLeavesSpot(vehicle);
+            i++;
+        }
+    }
+
+    /**
+     * This method will check if there are any vehicles leaving.
+     */
+    private void carsLeaving(){
+        // Let cars leave.
+        int i=0;
+        while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
+            exitCarQueue.removeCar();
+            i++;
+        }
+    }
+
+    /**
+     * This method will add arriving cars to the queues.
+     *
+     * @param numberOfCars This param contains the amount of waiting vehicles.
+     * @param type This param contains the type of vehicles.
+     */
+    private void addArrivingCars(int numberOfCars, String type){
+        // Add the cars to the back of the queue.
+        switch(type) {
+            case REGULAR:
+                for (int i = 0; i < numberOfCars; i++) {
+                	if (entranceCarQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
+                		entranceCarQueue.addCar(new RegularCar());
+                	}
+                }
+                break;
+            case SUBSCRIPTION:
+                for (int i = 0; i < numberOfCars; i++) {
+                	if (entrancePassQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
+                		entrancePassQueue.addCar(new SubscriptionCar());
+                	}
+                }
+                break;
+        }
+    }
+
+    /**
+     * This method will check if any vehicles will leave their spot.
+     * @param vehicle This param contains the current vehicle used.
+     */
+    private void carLeavesSpot(Vehicle vehicle){
+        removeCarAt(vehicle.getLocation());
+        exitCarQueue.addCar(vehicle);
+    }
+
+    /**
+     * This method creates and starts a new Thread.
+     */
+    public void start() {
+        new Thread(this).start();
+
+    }
+
+    /**
+     * This method will let the thread run
+     */
+    @Override
+    public void run() {
+        int i = 0;
+        running = true;
+
+        while ((running) && (i < period || automatic)) {
+
+            printTime();
+
+            advanceTime();
+
+            handleExit();
+
+            updateViews();
+
+            try {
+                Thread.sleep(tickPause);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            handleEntrance();
+
+            if (period > 0) {
+                i++;
+            }
+
+            if (i >= period && automatic == false) {
+                running = false;
+            }
+
+        }
+        notifyView();
+
+        setPeriod(0);
+    }
+
+    /**
+     * This method will print the time in the console.
+     */
+    private void printTime() {
+        if (minute < 10) {
+            System.out.println("Dag: " + day + " " + hour + ":" + "0" + minute);
+        } else {
+            System.out.println("Dag: " + day + " " + hour + ":" + minute);
+        }
+    }
+
+    /**
+     * This method will check the amount of cars.
+     *
+     * @param weekDay This param contains the week day arrivals.
+     * @param weekend This param contains the weekend arrivals.
+     * @return int This return will return the number of cars arriving.
+     */
+    private int getNumberOfCars(int weekDay, int weekend){
+        Random random = new Random();
+        float minuteFloat = minute;
+        float minutePct = (minuteFloat/60);
+        float timePct = hour + minutePct;
+        
+        double rushValue = (-(timePct*timePct) + (28 * timePct))/100;
+
+        // Get the average number of cars that arrive per hour.
+        int averageNumberOfCarsPerHour = day < 5
+                ? weekDay
+                : weekend;
+
+        // Calculate the number of cars that arrive this minute.
+        double standardDeviation = averageNumberOfCarsPerHour * 0.3;
+        double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation * rushValue;
+        return (int)Math.round(numberOfCarsPerHour / 60);
+    }
     
+    /**
+     * This method will check the first free location.
+     *
+     * @return location This method will return the first location that's free.
+     */
+    public Location getFirstFreeLocation(Vehicle vehicle) {
+        int subspaces = 0;
+        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+            for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    subspaces++;
+                    if ((vehicle instanceof SubscriptionCar)) {
+                        Location location = new Location(floor, row, place);
+
+                        if (getCarAt(location) == null) {
+                            return location;
+                        }
+                    }
+                    if (subspaces > placesForSubscriptionCars) {
+                        Location location = new Location(floor, row, place);
+
+                        if (getCarAt(location) == null) {
+                            return location;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * This method will retrieve the first car that has to leave.
+     *
+     * @return This return will return the first car that has to leave.
+     */
+    public Vehicle getFirstLeavingCar() {
+        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
+            for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    Vehicle vehicle = getCarAt(location);
+                    if (vehicle != null && vehicle.getMinutesLeft() <= 0 && !vehicle.getIsPaying()) {
+                        return vehicle;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+
+    /**
+     * This method will retrieve the car at the current location.
+     *
+     * @param location This param will contain the current location used.
+     * @return Vehicle This return will return the vehicle at the current location
+     */
+    public Vehicle getCarAt(Location location) {
+        if (!locationIsValid(location)) {
+            return null;
+        }
+        return vehicles[location.getFloor()][location.getRow()][location.getPlace()];
+    }
+
+    /**
+     * This method will set a new car at the current location.
+     *
+     * @param location This param contains the current location used.
+     * @param vehicle This param contains the current vehicle used.
+     * @return boolean This return will return a success or a fail.
+     */
+    public boolean setCarAt(Location location, Vehicle vehicle) {
+        if (!locationIsValid(location)) {
+            return false;
+        }
+
+        Vehicle oldVehicle = getCarAt(location);
+        if (oldVehicle == null) {
+            vehicles[location.getFloor()][location.getRow()][location.getPlace()] = vehicle;
+            vehicle.setLocation(location);
+            
+            if (vehicle instanceof RegularCar) {
+            	numberOfTakenSpotsByRegular++;
+            } else if (vehicle instanceof SubscriptionCar) {
+            	numberOfTakenSpotsBySubscription++;
+            } else if (vehicle instanceof ReservationCar) {
+            	numberOfTakenSpotsByReservation++;
+            }            
+
+            numberOfOpenSpots--;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the first free locations starting in the last Row of the top floor
+     *
+     * @param locations Empty locations ArrayList.
+     * @param floors Amount of floors.
+     * @param rows Amount of rows.
+     *
+     * @return ArrayList of locations.
+     */
+    public ArrayList<Location> getReservationSpots(ArrayList<Location> locations, int floors, int rows, int maxSpots) {
+        int amountOfSpots = maxSpots;
+
+        for (int r = rows; r > 0; r--) {
+            for (int p = 0; p < 30; p++) {
+                amountOfSpots--;
+                if (amountOfSpots <= 0) {
+                    break;
+                }
+                locations.add(new Location(floors-1, r-1, p));
+
+            }
+        }
+
+        return locations;
+    }
+
+    /**
+     * This method is for getting the time.
+     *
+     * @return String sends back the time
+     */
+    public String getTime() {
+        String timeString;
+        if (minute < 10) {
+            timeString = "Dag: " + day + " " + hour + ":" + "0" + minute;
+        } else {
+            timeString = "Dag: " + day + " " + hour + ":" + minute;
+        }
+
+        return timeString;
+    }
+    
+    /**
+     * This method sets the period in minutes
+     *
+     * @param int periodMinutes the period in minutes you want to set
+     */
+    public void setPeriod(int periodMinutes) {
+        period = periodMinutes;
+    }
+
+    /**
+     * This method will set if the program is running
+     *
+     * @param b true or false
+     */
+    public void setRunning(boolean b) {
+        running = b;
+    }
+
+    /**
+     * This method looks if the program is running.
+     *
+     * @return boolean running true or false
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * This method make the simulation go quicker or slower by setting the tickPause.
+     *
+     * @param int fps with how much to decrease the speed.
+     */
+    public void setTickPause(int fps) {
+        tickPause = 1001 - fps;
+    }
+
+    /**
+     * This method set if it is automatic or not.
+     *
+     * @param b true or false.
+     */
+    public void setAutomatic(boolean b) {
+        automatic = b;
+    }
+    
+    /**
+	 * This method is for getting the day.
+	 * 
+	 * @return String sends back the day
+	 */
+	public String getDay() {
+		return dayArray[day];
+	}
+	
+	/**
+     * This method will return a reservation.
+     *
+     * @return reservation a reservation
+     */
+    public Reservation getReservations() {
+        return reservation;
+    }
+    
+
 	/** 
 	 * This method will retrieve the payment speed of the cars.
 	 * 
@@ -375,609 +996,75 @@ public class Garage extends Model implements Runnable {
         return numberOfOpenSpots;
     }
     
+    /**
+     * This method will retrieve the number of taken spots by subscription cars in the garage.
+     *
+     * @return numberOfTakenSpotsBySubscription This return will return the number of taken spots by subscription cars in the garage.
+     */
     public int getNumberOfTakenSpotsBySubscription() {
     	return numberOfTakenSpotsBySubscription;
     }
     
+    /**
+     * This method will retrieve the number of taken spots by regular cars in the garage.
+     *
+     * @return numberOfTakenSpotsByRegular This return will return the number of taken spots by regular cars in the garage.
+     */
     public int getNumberOfTakenSpotsByRegular() {
     	return numberOfTakenSpotsByRegular;
     }
     
+    /**
+     * This method will retrieve the number of taken spots by reservation cars in the garage.
+     *
+     * @return numberOfTakenSpotsByReservation This return will return the number of taken spots by reservation cars in the garage.
+     */
     public int getNumberOfTakenSpotsByReservation() {
     	return numberOfTakenSpotsByReservation;
     }
-    
+
+    /**
+     * This method will retrieve the number of regular cars in the waiting queue at the entrance.
+     *
+     * @return int This return will return the number of regular cars in the waiting queue at the entrance.
+     */
     public int getNumberOfRegularCarsEntranceQueue() {
     	return entranceCarQueue.carsInQueue();
     }
     
+    /**
+     * This method will retrieve the number of subscription cars in the waiting queue at the entrance.
+     *
+     * @return int This return will return the number of subscription cars in the waiting queue at the entrance.
+     */
     public int getNumberOfSubscriptionCarsEntranceQueue() {
     	return entrancePassQueue.carsInQueue();
     }
     
+    /**
+     * This method will retrieve the number of cars in the waiting queue for the payment.
+     *
+     * @return int This return will return the number of cars in the waiting queue for the payment.
+     */
     public int getNumberOfPaymentQueue() {
     	return paymentCarQueue.carsInQueue();
     }
     
+    /**
+     * This method will retrieve the number of subscription cars in the waiting queue at the entrance.
+     *
+     * @return int This return will return the number of subscription cars in the waiting queue at the entrance.
+     */
     public int getNumberOfReserverationCarsQueue() {
     	return reservationCarQueue.carsInQueue();
     }
     
+    /**
+     * This method will retrieve the number of cars in the waiting queue for the exits.
+     *
+     * @return int This return will return the number of cars in the waiting queue for the exit.
+     */
     public int getNumberOfExitCarsQueue() {
     	return exitCarQueue.carsInQueue();
     }
-
-    /**
-     * This method will run the simulation of the garage.
-     */
-    public void tickThread() {
-        while (true) {
-            advanceTime();
-            handleExit();
-            updateViews();
-            // Pause.
-            try {
-                Thread.sleep(tickPause);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            handleEntrance();
-        }
-    }
-
-    /**
-     * This method will increment the minutes and calculate the right time.
-     */
-    private void advanceTime(){
-        // Advance the time by one minute.
-        minute++;
-        while (minute > 59) {
-            minute -= 60;
-            hour++;
-        }
-        while (hour > 23) {
-            hour -= 24;
-            day++;
-        }
-        while (day > 6) {
-            day -= 7;
-        }
-
-    }
-
-    /**
-     * This method will handle the entrance on entering and arrivals of the vehicles.
-     */
-    private void handleEntrance(){
-        carsArriving();
-        carsEntering(reservationCarQueue);
-        carsEntering(entrancePassQueue);
-        carsEntering(entranceCarQueue);
-        
-        handleMood(entrancePassQueue);
-		handleMood(entranceCarQueue);
-		handleMood(reservationCarQueue);
-    }
-
-    /**
-     * This method will handle the exist on leaving and payments of the vehicles.
-     */
-    private void handleExit(){
-        carsReadyToLeave();
-        carsPaying();
-        carsLeaving();
-    }
-
-    /**
-     * This method will update the current view.
-     */
-    private void updateViews(){
-        tick();
-        // Update the car park view.
-        notifyView();
-    }
-
-    /**
-     * This method will retrieve the car at the current location.
-     *
-     * @param location This param will contain the current location used.
-     * @return Vehicle This return will return the vehicle at the current location
-     */
-    public Vehicle getCarAt(Location location) {
-        if (!locationIsValid(location)) {
-            return null;
-        }
-        return vehicles[location.getFloor()][location.getRow()][location.getPlace()];
-    }
-
-    /**
-     * This method will set a new car at the current location.
-     *
-     * @param location This param contains the current location used.
-     * @param vehicle This param contains the current vehicle used.
-     * @return boolean This return will return a success or a fail.
-     */
-    public boolean setCarAt(Location location, Vehicle vehicle) {
-        System.out.println(amountOfReservationCars);
-        if (!locationIsValid(location)) {
-            return false;
-        }
-
-        Vehicle oldVehicle = getCarAt(location);
-        if (oldVehicle == null) {
-            vehicles[location.getFloor()][location.getRow()][location.getPlace()] = vehicle;
-            vehicle.setLocation(location);
-            
-            if (vehicle instanceof RegularCar) {
-            	numberOfTakenSpotsByRegular++;
-            } else if (vehicle instanceof SubscriptionCar) {
-            	numberOfTakenSpotsBySubscription++;
-            } else if (vehicle instanceof ReservationCar) {
-            	numberOfTakenSpotsByReservation++;
-            }            
-
-            numberOfOpenSpots--;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns the first free locations starting in the last Row of the top floor
-     *
-     * @param locations Empty locations ArrayList.
-     * @param floors Amount of floors.
-     * @param rows Amount of rows.
-     *
-     * @return ArrayList of locations.
-     */
-    public ArrayList<Location> getReservationSpots(ArrayList<Location> locations, int floors, int rows, int maxSpots) {
-        int amountOfSpots = maxSpots;
-
-        for (int r = rows; r > 0; r--) {
-            for (int p = 0; p < 30; p++) {
-                amountOfSpots--;
-                if (amountOfSpots <= 0) {
-                    break;
-                }
-                locations.add(new Location(floors-1, r-1, p));
-
-            }
-        }
-
-        return locations;
-    }
-
-    /**
-     * This method will remove the car at the current location.
-     *
-     * @param location This param contains the current location used.
-     * @return Vehicle This return will return the removed vehicle.
-     */
-    public Vehicle removeCarAt(Location location) {
-        if (!locationIsValid(location)) {
-            return null;
-        }
-        Vehicle vehicle = getCarAt(location);
-        if (vehicle == null) {
-            return null;
-        }
-        vehicles[location.getFloor()][location.getRow()][location.getPlace()] = null;
-        vehicle.setLocation(null);
-        
-        if (vehicle instanceof RegularCar) {
-        	numberOfTakenSpotsByRegular--;
-        } else if (vehicle instanceof SubscriptionCar) {
-        	numberOfTakenSpotsBySubscription--;
-        } else if (vehicle instanceof ReservationCar) {
-        	numberOfTakenSpotsByReservation--;
-        }
-        
-        numberOfOpenSpots++;
-        return vehicle;
-    }
-
-    /**
-     * This method will check the first free location.
-     *
-     * @return location This method will return the first location that's free.
-     */
-    public Location getFirstFreeLocation(Vehicle vehicle) {
-        int subspaces = 0;
-        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
-            for (int row = 0; row < getNumberOfRows(); row++) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    subspaces++;
-                    if ((vehicle instanceof SubscriptionCar)) {
-                        Location location = new Location(floor, row, place);
-
-                        if (getCarAt(location) == null) {
-                            return location;
-                        }
-                    }
-                    if (subspaces > placesForSubscriptionCars) {
-                        Location location = new Location(floor, row, place);
-
-                        if (getCarAt(location) == null) {
-                            return location;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * This method will retrieve the first car that has to leave.
-     *
-     * @return This return will return the first car that has to leave.
-     */
-    public Vehicle getFirstLeavingCar() {
-        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
-            for (int row = 0; row < getNumberOfRows(); row++) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    Vehicle vehicle = getCarAt(location);
-                    if (vehicle != null && vehicle.getMinutesLeft() <= 0 && !vehicle.getIsPaying()) {
-                        return vehicle;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * This method contains the tick for the data, it will update all locations and cars.
-     */
-    public void tick() {
-        for (int floor = 0; floor < getNumberOfFloors(); floor++) {
-            for (int row = 0; row < getNumberOfRows(); row++) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    Vehicle vehicle = getCarAt(location);
-                    if (vehicle != null) {
-                        vehicle.tick();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * This method will check if the location is valid to use.
-     *
-     * @param location This param contains the location that will be used.
-     * @return boolean This param contains the boolean if a location is valid or not.
-     */
-    private boolean locationIsValid(Location location) {
-        int floor = location.getFloor();
-        int row = location.getRow();
-        int place = location.getPlace();
-        if (floor < 0 || floor >= numberOfFloors || row < 0 || row > numberOfRows || place < 0 || place > numberOfPlaces) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * This method will check if there are any cars arriving.
-     */
-    private void carsArriving(){
-        Random random = new Random();
-        int amount = 1;
-        int reservationProbability = 1;
-        int multiReservationProbability = 1;
-
-        if (reservationChance != 0) {
-            reservationProbability = random.nextInt(this.reservationChance);
-        }
-
-        if (reservationProbability == 0) {
-            List<String> keys = new ArrayList<String>(reservation.getReservation().keySet());
-            String randomCompany = keys.get(random.nextInt(reservation.getReservation().size()));
-
-            if (multiReservationChance != 0 ) {
-                multiReservationProbability = random.nextInt(this.multiReservationChance);
-            }
-
-            if (multiReservationProbability == 0) {
-                amount = reservation.getAmountOfCars();
-            }
-
-            for (int i=0; i<amount; i++) {
-                reservationCarQueue.addCar(new ReservationCar(randomCompany, reservation.getColor(randomCompany)));
-            }
-
-        } else {
-            int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
-            addArrivingCars(numberOfCars, REGULAR);
-            numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
-            addArrivingCars(numberOfCars, SUBSCRIPTION);
-        }
-    }
-
-    /**
-     * This method will let the cars enter the garage.
-     *
-     * @param queue This param contains the queue of vehicle that are waiting.
-     */
-    private void carsEntering(CustomerQueue queue){
-        Random random = new Random();
-        // Remove reservation car from queue and give a space
-        for (int i=0;i<enterSpeed;i++) {
-            ReservationCar vehicle = (ReservationCar) reservationCarQueue.removeCar();
-
-            if (vehicle == null) {
-                break;
-            }
-
-            String company = vehicle.getCompany();
-            ArrayList<Location> companyLocations = reservation.getCompanyLocations(company);
-
-            for (Location companyLocation : companyLocations) {
-                if(getCarAt(companyLocation) == null) {
-                    int stayMinutes = (int) (15+random.nextFloat() * 10 * 60);
-                    vehicle.setStayTime(stayMinutes);
-                    setCarAt(companyLocation, vehicle);
-                    break;
-                }
-            }
-
-
-        }
-
-        int i=0;
-        // Remove car from the front of the queue and assign to a parking space.
-        while (queue.carsInQueue()>0 &&
-                getNumberOfOpenSpots()>0 &&
-                i<enterSpeed) {
-            Vehicle vehicle = queue.removeCar();
-            Location freeLocation = getFirstFreeLocation(vehicle);
-            setCarAt(freeLocation, vehicle);
-            i++;
-        }
-    }
-
-    /**
-     * This method will check if there are any vehicles ready to leave.
-     */
-    private void carsReadyToLeave(){
-        // Add leaving cars to the payment queue.
-        Vehicle vehicle = getFirstLeavingCar();
-
-        while (vehicle!=null) {
-            if (vehicle.getHasToPay()){
-                vehicle.setIsPaying(true);
-                paymentCarQueue.addCar(vehicle);
-            } else {
-                carLeavesSpot(vehicle);
-            }
-            vehicle = getFirstLeavingCar();
-        }
-    }
-
-    /**
-     * This method will check if there are any vehicles paying.
-     */
-    private void carsPaying(){
-        // Let cars pay.
-        int i=0;
-        while (paymentCarQueue.carsInQueue()>0 && i < paymentSpeed){
-            Vehicle vehicle = paymentCarQueue.removeCar();
-            // TODO Handle payment.
-            carLeavesSpot(vehicle);
-            i++;
-        }
-    }
-
-    /**
-     * This method will check if there are any vehicles leaving.
-     */
-    private void carsLeaving(){
-        // Let cars leave.
-        int i=0;
-        while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
-            exitCarQueue.removeCar();
-            i++;
-        }
-    }
-
-    /**
-     * This method will check the amount of cars.
-     *
-     * @param weekDay This param contains the week day arrivals.
-     * @param weekend This param contains the weekend arrivals.
-     * @return int This return will return the number of cars arriving.
-     */
-    private int getNumberOfCars(int weekDay, int weekend){
-        Random random = new Random();
-        float minuteFloat = minute;
-        float minutePct = (minuteFloat/60);
-        float timePct = hour + minutePct;
-        
-        double rushValue = (-(timePct*timePct) + (28 * timePct))/100;
-
-        // Get the average number of cars that arrive per hour.
-        int averageNumberOfCarsPerHour = day < 5
-                ? weekDay
-                : weekend;
-
-        // Calculate the number of cars that arrive this minute.
-        double standardDeviation = averageNumberOfCarsPerHour * 0.3;
-        double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation * rushValue;
-        return (int)Math.round(numberOfCarsPerHour / 60);
-    }
-
-    /**
-     * This method will add arriving cars to the queues.
-     *
-     * @param numberOfCars This param contains the amount of waiting vehicles.
-     * @param type This param contains the type of vehicles.
-     */
-    private void addArrivingCars(int numberOfCars, String type){
-        // Add the cars to the back of the queue.
-        switch(type) {
-            case REGULAR:
-                for (int i = 0; i < numberOfCars; i++) {
-                	if (entranceCarQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
-                		entranceCarQueue.addCar(new RegularCar());
-                	}
-                }
-                break;
-            case SUBSCRIPTION:
-                for (int i = 0; i < numberOfCars; i++) {
-                	if (entrancePassQueue.carsInQueue() <= CustomerQueue.getMaxQueueSize()) {
-                		entrancePassQueue.addCar(new SubscriptionCar());
-                	}
-                }
-                break;
-        }
-    }
-
-    /**
-     * This method will return a reservation.
-     *
-     * @return reservation a reservation
-     */
-    public Reservation getReservations() {
-        return reservation;
-    }
-
-    /**
-     * This method will check if any vehicles will leave their spot.
-     * @param vehicle This param contains the current vehicle used.
-     */
-
-    private void carLeavesSpot(Vehicle vehicle){
-        removeCarAt(vehicle.getLocation());
-        exitCarQueue.addCar(vehicle);
-    }
-
-    /**
-     * This method creates and starts a new Thread.
-     */
-    public void start() {
-        new Thread(this).start();
-
-    }
-
-    @Override
-    public void run() {
-        int i = 0;
-        running = true;
-
-        while ((running) && (i < period || automatic)) {
-
-            printTime();
-
-            advanceTime();
-
-            handleExit();
-
-            updateViews();
-
-            try {
-                Thread.sleep(tickPause);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            handleEntrance();
-
-            if (period > 0) {
-                i++;
-            }
-
-            if (i >= period && automatic == false) {
-                running = false;
-            }
-
-        }
-        notifyView();
-
-        setPeriod(0);
-    }
-
-    /**
-     * This method will print the time in the console.
-     */
-    private void printTime() {
-        if (minute < 10) {
-            System.out.println("Dag: " + day + " " + hour + ":" + "0" + minute);
-        } else {
-            System.out.println("Dag: " + day + " " + hour + ":" + minute);
-        }
-    }
-
-    /**
-     * This method sets the period in minutes
-     *
-     * @param int periodMinutes the period in minutes you want to set
-     */
-    public void setPeriod(int periodMinutes) {
-        period = periodMinutes;
-    }
-
-    /**
-     * This method will set if the program is running
-     *
-     * @param b true or false
-     */
-    public void setRunning(boolean b) {
-        running = b;
-    }
-
-    /**
-     * This method looks if the program is running.
-     *
-     * @return boolean running true or false
-     */
-    public boolean isRunning() {
-        return running;
-    }
-
-    /**
-     * This method make the simulation go quicker or slower by setting the tickPause.
-     *
-     * @param int fps with how much to decrease the speed.
-     */
-    public void setTickPause(int fps) {
-        tickPause = 1001 - fps;
-    }
-
-    /**
-     * This method set if it is automatic or not.
-     *
-     * @param b true or false.
-     */
-    public void setAutomatic(boolean b) {
-        automatic = b;
-    }
-
-    /**
-     * This method is for getting the time.
-     *
-     * @return String sends back the time
-     */
-    public String getTime() {
-        String timeString;
-        if (minute < 10) {
-            timeString = "Dag: " + day + " " + hour + ":" + "0" + minute;
-        } else {
-            timeString = "Dag: " + day + " " + hour + ":" + minute;
-        }
-
-        return timeString;
-    }
-    
-    /**
-	 * This method is for getting the day.
-	 * 
-	 * @return String sends back the day
-	 */
-	public String getDay() {
-		return dayArray[day];
-	}
 }
