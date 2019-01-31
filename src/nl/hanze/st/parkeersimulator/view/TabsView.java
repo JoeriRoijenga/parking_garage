@@ -1,5 +1,8 @@
 package nl.hanze.st.parkeersimulator.view;
 
+import java.awt.Color;
+import java.awt.GridLayout;
+
 import javax.swing.*;
 
 import nl.hanze.st.mvc.Model;
@@ -36,14 +39,29 @@ public class TabsView extends JTabbedPane {
 	 */
 	public TabsView(Model model) {					
 		JComponent managementInfo = new JPanel();
+		managementInfo.setLayout(new BoxLayout(managementInfo, BoxLayout.Y_AXIS));
+		
+		JComponent pieGraph = new JPanel();
+		pieGraph.setLayout(new BoxLayout(pieGraph, BoxLayout.Y_AXIS));
+		
+		JComponent managementInfoView = new JPanel();
 		JComponent pieGraphic = new JPanel();
 		JComponent barGraphic = new JPanel();
+		JComponent legend1 = new JPanel();
+		JComponent legend2 = new JPanel();
 		
-		managementInfo.add(managementInformationView);
+		legend1.add(createLegend());
+		legend2.add(createLegend());
+		
+		managementInfoView.add(managementInformationView);
+		managementInfo.add(managementInfoView);
+		managementInfo.add(legend1);
 		addTab("Management", null, managementInfo, "Management Information");
 		
 		pieGraphic.add(pieGraphicView);
-		addTab("Pie Graphic", null, pieGraphic, "Pie Graphic");
+		pieGraph.add(pieGraphic);
+		pieGraph.add(legend2);
+		addTab("Pie Graphic", null, pieGraph, "Pie Graphic");
 
 		barGraphic.add(barGraphicView);
 		addTab("Bar Graphic", null, barGraphic, "Bar Graphic");
@@ -53,5 +71,35 @@ public class TabsView extends JTabbedPane {
 		model.addView(barGraphicView);
 		
 		setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+	}
+	
+	public JComponent createLegend() {
+		JPanel colorPane = new JPanel();
+		colorPane.setLayout(new GridLayout(3, 3));
+
+		JLabel redIcon = new JLabel();
+		redIcon.setText("■");
+		redIcon.setForeground(Color.RED);
+		JLabel redLabel = new JLabel();
+		redLabel.setText("Regular car");
+		JLabel blueIcon = new JLabel();
+		blueIcon.setText("■");
+		blueIcon.setForeground(Color.BLUE);
+		JLabel blueLabel = new JLabel();
+		blueLabel.setText("Subscription car");
+		JLabel greenIcon = new JLabel();
+		greenIcon.setText("■");
+		greenIcon.setForeground(Color.GREEN);
+		JLabel greenLabel = new JLabel();
+		greenLabel.setText("Reservation car");
+		
+		colorPane.add(redIcon);
+		colorPane.add(redLabel);
+		colorPane.add(blueIcon);
+		colorPane.add(blueLabel);
+		colorPane.add(greenIcon);
+		colorPane.add(greenLabel);
+		
+		return colorPane;
 	}
 }

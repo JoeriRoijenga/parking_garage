@@ -144,7 +144,7 @@ public class Garage extends Model implements Runnable {
     /**
      * @param weekendPassArrivals this param contains the average number of subscription car arrivals in the weekends per hour.
      */
-    int weekendPassArrivals = 5;
+    int weekendPassArrivals = 25;
 
     /**
      * @param multiReservationChance This param contains a 1 on .. chance of getting multiple cars in a reservation.
@@ -564,9 +564,6 @@ public class Garage extends Model implements Runnable {
         running = true;
 
         while ((running) && (i < period || automatic)) {
-
-            printTime();
-
             advanceTime();
 
             handleExit();
@@ -595,17 +592,6 @@ public class Garage extends Model implements Runnable {
     }
 
     /**
-     * This method will print the time in the console.
-     */
-    private void printTime() {
-        if (minute < 10) {
-            System.out.println("Dag: " + day + " " + hour + ":" + "0" + minute);
-        } else {
-            System.out.println("Dag: " + day + " " + hour + ":" + minute);
-        }
-    }
-
-    /**
      * This method will check the amount of cars.
      *
      * @param weekDay This param contains the week day arrivals.
@@ -617,9 +603,16 @@ public class Garage extends Model implements Runnable {
         float minuteFloat = minute;
         float minutePct = (minuteFloat/60);
         float timePct = hour + minutePct;
-        
-        double rushValue = (-(timePct*timePct) + (28 * timePct))/100;
+        double rushValue = 0;
 
+        if (day == 3 && timePct > 17 && 20 > timePct) {
+        	rushValue = ((-(timePct*timePct) + (24 * timePct))/40);	
+        } else if(timePct > 1 && 5.5 > timePct) {	
+        	rushValue = (((0.001*(timePct*timePct) + (timePct)))/20)+0.01;
+    	} else {
+        	rushValue = ((-(timePct*timePct) + (24 * timePct))/80);
+        }
+        
         // Get the average number of cars that arrive per hour.
         int averageNumberOfCarsPerHour = day < 5
                 ? weekDay
@@ -627,7 +620,7 @@ public class Garage extends Model implements Runnable {
 
         // Calculate the number of cars that arrive this minute.
         double standardDeviation = averageNumberOfCarsPerHour * 0.3;
-        double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation * rushValue;
+        double numberOfCarsPerHour = ((averageNumberOfCarsPerHour * rushValue) + random.nextGaussian() * standardDeviation);
         return (int)Math.round(numberOfCarsPerHour / 60);
     }
     

@@ -65,10 +65,9 @@ public class BarGraphicView extends View {
 		Garage garage = (Garage) model;
 		
 		title = "Parked Cars";
-	    values = new double[]{500, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription(), garage.getNumberOfTakenSpotsByReservation()};
-	    labels = new String[]{"", "Regular","Subscription", "Reservation"};
+	    values = new double[]{garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription(), garage.getNumberOfTakenSpotsByReservation()};
+	    labels = new String[]{"Regular","Subscription", "Reservation"};
 	    colors = new Color[]{	        
-    		Color.LIGHT_GRAY,
     		RegularCar.color,
     		SubscriptionCar.color,
     		ReservationCar.colorCar,
@@ -89,7 +88,7 @@ public class BarGraphicView extends View {
 	    }
 	 
 	    double minValue = 0;
-	    double maxValue = 0;
+	    double maxValue = 300;
 	    for (int i = 0; i < values.length; i++) {
 	      if (minValue > values[i]) {
 	        minValue = values[i];
