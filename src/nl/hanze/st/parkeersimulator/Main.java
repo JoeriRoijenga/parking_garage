@@ -60,11 +60,18 @@ public class Main {
 		southPane.add(sliderView);
 		southPane.add(timeView);
 		
+		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		sp.setDividerLocation(0.8);
+        //sp.setResizeWeight(1);
+		sp.add(parkingView);
+        sp.add(tabsView);
+		sp.setEnabled(false);
+	    sp.setDividerSize(0);
+		
 		Container contentPane = window.getContentPane();
 		contentPane.setLayout(new BorderLayout());
-		contentPane.add(parkingView, BorderLayout.CENTER);
+		contentPane.add(sp, BorderLayout.CENTER);
 		contentPane.add(southPane, BorderLayout.SOUTH);
-		contentPane.add(tabsView, BorderLayout.EAST);
 		
 		window.pack();
 		window.setVisible(true);

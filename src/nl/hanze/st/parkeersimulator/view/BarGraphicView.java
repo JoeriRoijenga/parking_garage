@@ -38,10 +38,9 @@ public class BarGraphicView extends View {
             BarGraphicImage = createImage(size.width, size.height);
         }
 		title = "Parked Cars";
-	    values = new double[]{500, garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription(), garage.getNumberOfTakenSpotsByReservation()};
-	    labels = new String[]{"", "Regular","Subscription", "Reservation"};
+	    values = new double[]{garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription(), garage.getNumberOfTakenSpotsByReservation()};
+	    labels = new String[]{"Regular","Subscription", "Reservation"};
 	    colors = new Color[]{	        
-    		Color.LIGHT_GRAY,
     		Color.red,
 	        Color.blue,
 	        Color.green
@@ -57,7 +56,7 @@ public class BarGraphicView extends View {
 	    }
 	 
 	    double minValue = 0;
-	    double maxValue = 0;
+	    double maxValue = 540;
 	    for (int i = 0; i < values.length; i++) {
 	      if (minValue > values[i]) {
 	        minValue = values[i];
