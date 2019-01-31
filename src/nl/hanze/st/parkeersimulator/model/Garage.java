@@ -1017,6 +1017,15 @@ public class Garage extends Model implements Runnable {
     }
     
     /**
+     * This method will retrieve the number of open spots in the garage for reservations and regular cars.
+     *
+     * @return getNumberOfOpenSpotsRegAndRes This return will return the number of open spots in the garage for reservations and regular cars.
+     */
+    public int getNumberOfOpenSpotsRegAndRes(){
+        return numberOfOpenSpotsRegAndRes;
+    }
+    
+    /**
      * This method will retrieve the number of taken spots by subscription cars in the garage.
      *
      * @return numberOfTakenSpotsBySubscription This return will return the number of taken spots by subscription cars in the garage.

@@ -27,8 +27,9 @@ public class ManagementInformationView extends View {
 	 * @param queueExitCarAmount This param contains the amount of cars in the exit queue.
 	 * @param queueReservationAmount This param contains the amount of reservation cars in the entrance queue.
 	 * @param queuePaymentAmount This param contains the amount of cars in the payment queue.
+	 * @param regularPlacesAmount This param contains the open spots for the reservations and regular cars.
 	 */
-	private int parkingSpots, regularCars, subsciptionCar, reservationCar, queueEntranceRegularAmount, queueEntranceSubscriptionAmount, queueExitCarAmount, queueReservationAmount, queuePaymentAmount;
+	private int parkingSpots, regularCars, subsciptionCar, reservationCar, queueEntranceRegularAmount, queueEntranceSubscriptionAmount, queueExitCarAmount, queueReservationAmount, queuePaymentAmount, regularPlacesAmount;
 	
 	/**
 	 * @param panel This param contains the panel with all the management information.
@@ -46,7 +47,7 @@ public class ManagementInformationView extends View {
 	 * This method will create the overview.
 	 */
 	public void creatingOverview() {		
-		panel.setLayout(new GridLayout(0,2));
+		panel.setLayout(new GridLayout(0,1));
 
 		Border border = BorderFactory.createLineBorder(Color.black);
 						
@@ -104,7 +105,14 @@ public class ManagementInformationView extends View {
 		queueExitCar.setFont(new Font(queueExitCar.getName(), Font.PLAIN, 25));
 		queueExitCar.setBorder(border);
 		
+		JLabel regularPlaces = new JLabel();
+		regularPlaces.setText("Regular Places: " + regularPlacesAmount);
+		regularPlaces.setPreferredSize(new Dimension(300, 40));
+		regularPlaces.setFont(new Font(regularPlaces.getName(), Font.PLAIN, 25));
+		regularPlaces.setBorder(border);
+		
 		panel.add(openSpots);
+		panel.add(regularPlaces);
 		panel.add(parkedRegular);
 		panel.add(parkedSubscription);
 		panel.add(parkedReservation);		
@@ -137,6 +145,8 @@ public class ManagementInformationView extends View {
 		queueReservationAmount = garage.getNumberOfReserverationCarsQueue();
 		queuePaymentAmount = garage.getNumberOfPaymentQueue();
 		queueExitCarAmount = garage.getNumberOfExitCarsQueue();
+		
+		regularPlacesAmount = garage.getNumberOfOpenSpotsRegAndRes();
 		
 		panel.removeAll();
 		creatingOverview();

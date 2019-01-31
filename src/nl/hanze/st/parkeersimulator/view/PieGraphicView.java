@@ -36,10 +36,15 @@ public class PieGraphicView extends View {
 	 */
 	private double degreeReservation;
 	
+	/**
+	 * @param startSubscriptionDegree This param contains the starting position for subscription.
+	 */
+	private double startSubscriptionDegree;
 	
-	private double startSubscription;
-	
-	private double startReservation;
+	/**
+	 * @param startReservationDegree This param contains the starting position for reservation.
+	 */
+	private double startReservationDegree;
 	
 	/**
      * Constructor for objects of class CarPark
@@ -85,13 +90,12 @@ public class PieGraphicView extends View {
 			degreeRegular = degreeRegular * -1;
 		} else if (min.intValue() == (int) degreeSubscription) {
 			degreeSubscription = degreeSubscription * -1;
-			startSubscription = 0;
-			startReservation = degreeRegular;
-			
+			startSubscriptionDegree = 0;
+			startReservationDegree = degreeRegular;
 		} else if (min.intValue() == (int) degreeReservation) {
 			degreeReservation = degreeReservation * -1;
-			startReservation = 0;
-			startSubscription = degreeRegular;
+			startReservationDegree = 0;
+			startSubscriptionDegree = degreeRegular;
 		}
 		
 		repaint();
@@ -115,14 +119,14 @@ public class PieGraphicView extends View {
 	    g2.setColor(RegularCar.color);
 	    g2.fill(arc);
 	    
-	    arc.setAngleStart(startSubscription);
+	    arc.setAngleStart(startSubscriptionDegree);
 	    arc.setAngleExtent(degreeSubscription);
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
 	    g2.setColor(SubscriptionCar.color);
 	    g2.fill(arc);
 	    
-	    arc.setAngleStart(startReservation);
+	    arc.setAngleStart(startReservationDegree);
 	    arc.setAngleExtent(degreeReservation);
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
