@@ -51,6 +51,8 @@ public class Garage extends Model implements Runnable {
      */
     private int numberOfOpenSpots;
     
+    private int numberOfOpenSpotsRegAndRes;
+    
     /**
      * @param numberOfTakenSpotsByRegular This param contains the amount of taken spots by regular cars in the garage.
      */
@@ -214,7 +216,7 @@ public class Garage extends Model implements Runnable {
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
         this.numberOfOpenSpots = numberOfFloors*numberOfRows*numberOfPlaces;
-        
+        this.numberOfOpenSpotsRegAndRes = numberOfOpenSpots - placesForSubscriptionCars;
         this.numberOfTakenSpotsByRegular = 0;
         this.numberOfTakenSpotsBySubscription = 0;
         
@@ -347,10 +349,15 @@ public class Garage extends Model implements Runnable {
         
         if (vehicle instanceof RegularCar) {
         	numberOfTakenSpotsByRegular--;
+        	numberOfOpenSpotsRegAndRes++;
         } else if (vehicle instanceof SubscriptionCar) {
         	numberOfTakenSpotsBySubscription--;
+        	if (getLocationPlaceNumber(location) > placesForSubscriptionCars) {
+        		numberOfOpenSpotsRegAndRes++;
+        	}
         } else if (vehicle instanceof ReservationCar) {
         	numberOfTakenSpotsByReservation--;
+        	numberOfOpenSpotsRegAndRes++;
         }
         
         numberOfOpenSpots++;
@@ -458,10 +465,9 @@ public class Garage extends Model implements Runnable {
         }
 
         int i=0;
+        
         // Remove car from the front of the queue and assign to a parking space.
-        while (queue.carsInQueue()>0 &&
-                getNumberOfOpenSpots()>0 &&
-                i<enterSpeed) {
+        while (queue.carsInQueue()>0 && getNumberOfOpenSpots()>0 && i<enterSpeed && numberOfOpenSpotsRegAndRes > 0) {
             Vehicle vehicle = queue.removeCar();
             Location freeLocation = getFirstFreeLocation(vehicle);
             setCarAt(freeLocation, vehicle);
@@ -708,10 +714,15 @@ public class Garage extends Model implements Runnable {
             
             if (vehicle instanceof RegularCar) {
             	numberOfTakenSpotsByRegular++;
+            	numberOfOpenSpotsRegAndRes--;
             } else if (vehicle instanceof SubscriptionCar) {
             	numberOfTakenSpotsBySubscription++;
+            	if (getLocationPlaceNumber(location) > placesForSubscriptionCars) {
+            		numberOfOpenSpotsRegAndRes--;
+            	}
             } else if (vehicle instanceof ReservationCar) {
             	numberOfTakenSpotsByReservation++;
+            	numberOfOpenSpotsRegAndRes--;
             }            
 
             numberOfOpenSpots--;
@@ -720,7 +731,23 @@ public class Garage extends Model implements Runnable {
 
         return false;
     }
-
+    
+    /**
+     * This method will retrieve the number of the place of the car.
+     * 
+     * @param location This param contains the location.
+     * @return placesNumber This param contains the number of the place of the car.
+     */
+    private int getLocationPlaceNumber(Location location) {
+    	int floors, rows, placeNumber = 0;
+    	
+    	floors = location.getFloor();
+    	rows = (floors * numberOfRows) + location.getRow();
+    	placeNumber = (rows * numberOfPlaces) + location.getPlace() + 1;
+    	
+    	return placeNumber;
+    }
+    
     /**
      * Returns the first free locations starting in the last Row of the top floor
      *

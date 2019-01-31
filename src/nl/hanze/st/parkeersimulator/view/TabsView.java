@@ -73,6 +73,11 @@ public class TabsView extends JTabbedPane {
 		setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
 	
+	/**
+	 * This method will create the legend for the graph.
+	 * 
+	 * @return colorPane This return will return the colorPane with the legend.
+	 */
 	public JComponent createLegend() {
 		JPanel colorPane = new JPanel();
 		colorPane.setLayout(new GridLayout(3, 3));
