@@ -35,6 +35,11 @@ public class PieGraphicView extends View {
 	 * @param degreeReservation This param contains the degrees for the reservation cars.
 	 */
 	private double degreeReservation;
+
+	/**
+	 * @param startRegularDegree This param contains the starting position for regular.
+	 */
+	private double startRegularDegree;
 	
 	/**
 	 * @param startSubscriptionDegree This param contains the starting position for subscription.
@@ -88,6 +93,9 @@ public class PieGraphicView extends View {
 				
 		if (min.intValue() == (int) degreeRegular) {
 			degreeRegular = degreeRegular * -1;
+			startRegularDegree = 0;
+			startReservationDegree = 0;
+			startSubscriptionDegree = degreeReservation;
 		} else if (min.intValue() == (int) degreeSubscription) {
 			degreeSubscription = degreeSubscription * -1;
 			startSubscriptionDegree = 0;
@@ -112,7 +120,7 @@ public class PieGraphicView extends View {
 		Arc2D.Double arc = new Arc2D.Double(Arc2D.PIE);
 		arc.setFrame(50, 20, 300, 300);
 		
-		arc.setAngleStart(0);
+		arc.setAngleStart(startRegularDegree);
 	    arc.setAngleExtent(degreeRegular);
 	    g2.setColor(Color.white);
 	    g2.draw(arc);
