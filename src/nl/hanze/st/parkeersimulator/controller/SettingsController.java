@@ -10,6 +10,7 @@ import javax.swing.*;
 import nl.hanze.st.mvc.Controller;
 import nl.hanze.st.mvc.View;
 import nl.hanze.st.parkeersimulator.model.Garage;
+import nl.hanze.st.parkeersimulator.view.ExceptionMessageView;
 import nl.hanze.st.parkeersimulator.view.MenuSettingsView;
 
 /**
@@ -58,53 +59,48 @@ public class SettingsController extends Controller {
 		switch (event_id) {
 			case EVENT_ID_SAVE:
 				try {
-					settingsView = ((MenuSettingsView) view).settingsFrame;
-					JPanel settings = (JPanel) ((JPanel) settingsView.getContentPane().getComponent(0)).getComponent(0);
-					
-					JTextField exitSpeed = (JTextField) settings.getComponent(1);
-					JTextField paymentSpeed = (JTextField) settings.getComponent(3);
-					
-					JTextField weekDayArrivals = (JTextField) settings.getComponent(5);
-					JTextField weekendArrivals = (JTextField) settings.getComponent(7);
-					
-					JTextField weekDayPassArrivals = (JTextField) settings.getComponent(9);
-					JTextField weekendPassArrivals = (JTextField) settings.getComponent(11);
-					
-					JTextField reservationChance = (JTextField) settings.getComponent(13);
-					
-					garage.setExitSpeed(Integer.parseInt(exitSpeed.getText()));
-					garage.setPaymentSpeed(Integer.parseInt(paymentSpeed.getText()));
-					
-					garage.setWeekDayArrivals(Integer.parseInt(weekDayArrivals.getText()));
-					garage.setWeekendArrivals(Integer.parseInt(weekendArrivals.getText()));
-					
-					garage.setWeekDayPassArrivals(Integer.parseInt(weekDayPassArrivals.getText()));
-					garage.setWeekendPassArrivals(Integer.parseInt(weekendPassArrivals.getText()));
-					
-					garage.setReservationChance(Integer.parseInt(reservationChance.getText()));				
-					
-					settingsView.dispose();
+					save(view);
 					return true;
 				} catch(Exception e) {
-					JFrame exceptionFrame = new JFrame("Failed");
-					exceptionFrame.setSize(500,200);
-					exceptionFrame.setLayout(new GridLayout(3,3));
-					
-					JLabel textLabel = new JLabel("Save Failed!",JLabel.CENTER);
-					textLabel.setFont(new Font("Sans", Font.PLAIN, 20));
-					JLabel errorLabel = new JLabel("One of the values is invalid.",JLabel.CENTER);
-					exceptionFrame.addWindowListener(new WindowAdapter() {
-						public void windowClosing(WindowEvent windowsEvent) {
-							exceptionFrame.dispose();
-						}
-					});		
-					
-					exceptionFrame.add(textLabel);
-					exceptionFrame.add(errorLabel);					
-					exceptionFrame.setVisible(true);
+					new ExceptionMessageView();
+					return false;
 				}
 			default:
 				return false;
 		}
+	}
+	
+	/**
+	 * This method will save all the settings.
+	 * 
+	 * @param view This param contains the View given for the event. 
+	 */
+	private void save(View view) {
+		settingsView = ((MenuSettingsView) view).settingsFrame;
+		JPanel settings = (JPanel) ((JPanel) settingsView.getContentPane().getComponent(0)).getComponent(0);
+		
+		JTextField exitSpeed = (JTextField) settings.getComponent(1);
+		JTextField paymentSpeed = (JTextField) settings.getComponent(3);
+		
+		JTextField weekDayArrivals = (JTextField) settings.getComponent(5);
+		JTextField weekendArrivals = (JTextField) settings.getComponent(7);
+		
+		JTextField weekDayPassArrivals = (JTextField) settings.getComponent(9);
+		JTextField weekendPassArrivals = (JTextField) settings.getComponent(11);
+		
+		JTextField reservationChance = (JTextField) settings.getComponent(13);
+		
+		garage.setExitSpeed(Integer.parseInt(exitSpeed.getText()));
+		garage.setPaymentSpeed(Integer.parseInt(paymentSpeed.getText()));
+		
+		garage.setWeekDayArrivals(Integer.parseInt(weekDayArrivals.getText()));
+		garage.setWeekendArrivals(Integer.parseInt(weekendArrivals.getText()));
+		
+		garage.setWeekDayPassArrivals(Integer.parseInt(weekDayPassArrivals.getText()));
+		garage.setWeekendPassArrivals(Integer.parseInt(weekendPassArrivals.getText()));
+		
+		garage.setReservationChance(Integer.parseInt(reservationChance.getText()));				
+		
+		settingsView.dispose();
 	}
 }
