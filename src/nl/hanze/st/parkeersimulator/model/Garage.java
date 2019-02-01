@@ -227,24 +227,6 @@ public class Garage extends Model implements Runnable {
         this.reservation = new Reservation();
         
     }
-    
-    /**
-     * This method will run the simulation of the garage.
-     */
-    public void tickThread() {
-        while (true) {
-            advanceTime();
-            handleExit();
-            updateViews();
-            // Pause.
-            try {
-                Thread.sleep(tickPause);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            handleEntrance();
-        }
-    }
 
     /**
      * This method will increment the minutes and calculate the right time.

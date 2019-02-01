@@ -1,6 +1,7 @@
 package nl.hanze.st.parkeersimulator.view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.*;
@@ -85,18 +86,23 @@ public class TabsView extends JTabbedPane {
 		JLabel redIcon = new JLabel();
 		redIcon.setText("■");
 		redIcon.setForeground(Color.RED);
+		redIcon.setFont(new Font(redIcon.getName(), Font.PLAIN, 30));		
 		JLabel redLabel = new JLabel();
-		redLabel.setText("Regular car");
+		redLabel.setText("Regular Cars");
+		
 		JLabel blueIcon = new JLabel();
 		blueIcon.setText("■");
 		blueIcon.setForeground(Color.BLUE);
+		blueIcon.setFont(new Font(blueIcon.getName(), Font.PLAIN, 30));		
 		JLabel blueLabel = new JLabel();
-		blueLabel.setText("Subscription car");
-		JLabel greenIcon = new JLabel();
+		blueLabel.setText("Subscription Cars");
+		
+		JLabel greenIcon = new JLabel();		
 		greenIcon.setText("■");
-		greenIcon.setForeground(Color.GREEN);
+		greenIcon.setForeground(Color.BLACK);
+		greenIcon.setFont(new Font(greenIcon.getName(), Font.PLAIN, 30));		
 		JLabel greenLabel = new JLabel();
-		greenLabel.setText("Reservation car");
+		greenLabel.setText("Remaining (Reservation) Cars");
 		
 		colorPane.add(redIcon);
 		colorPane.add(redLabel);

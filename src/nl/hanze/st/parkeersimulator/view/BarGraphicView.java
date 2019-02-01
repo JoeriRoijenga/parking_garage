@@ -51,7 +51,7 @@ public class BarGraphicView extends View {
      * @return Dimension This return will return a preferred dimension.
      */
     public Dimension getPreferredSize() {
-        return new Dimension(800, 400);
+        return new Dimension(400, 400);
     }
 
     
@@ -101,7 +101,7 @@ public class BarGraphicView extends View {
 	    Dimension dim = getSize();
 	    int panelWidth = dim.width;
 	    int panelHeight = dim.height;
-	    int barWidth = panelWidth / (values.length + 4);
+	    int barWidth = panelWidth / (values.length);
 	 
 	    Font titleFont = new Font("Book Antiqua", Font.BOLD, 15);
 	    FontMetrics titleFontMetrics = g.getFontMetrics(titleFont);

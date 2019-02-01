@@ -57,7 +57,7 @@ public class PieGraphicView extends View {
      * Overridden. Tell the GUI manager how big we would like to be.
      */
     public Dimension getPreferredSize() {
-        return new Dimension(800, 400);
+        return new Dimension(400, 350);
     }
 
     /**
@@ -110,7 +110,7 @@ public class PieGraphicView extends View {
 		Graphics2D g2 = (Graphics2D) g;
 		
 		Arc2D.Double arc = new Arc2D.Double(Arc2D.PIE);
-		arc.setFrame(20, 20, 300, 300);
+		arc.setFrame(50, 20, 300, 300);
 		
 		arc.setAngleStart(0);
 	    arc.setAngleExtent(degreeRegular);
