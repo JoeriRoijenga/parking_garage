@@ -277,13 +277,13 @@ public class Garage extends Model implements Runnable {
      */
     private void handleEntrance(){
         carsArriving();
-        carsEntering(reservationCarQueue);
+//        carsEntering(reservationCarQueue);
         carsEntering(entrancePassQueue);
         carsEntering(entranceCarQueue);
         
         handleMood(entrancePassQueue);
 		handleMood(entranceCarQueue);
-		handleMood(reservationCarQueue);
+//		handleMood(reservationCarQueue);
     }
     
     /**
@@ -416,7 +416,7 @@ public class Garage extends Model implements Runnable {
             			hour == arrivalHour)
             	{
             		for (int i = 0; i<reservation.getAmountOfCars(key); i++) {          			
-            			reservationCarQueue.addCar(new ReservationCar(reservation.getCompanyName(key), reservation.getColor(key), key));
+            			entranceCarQueue.addCar(new ReservationCar(reservation.getCompanyName(key), reservation.getColor(key), key));
             		}
             	}
             }
@@ -455,7 +455,7 @@ public class Garage extends Model implements Runnable {
     		/**
     		 * Get a random arriving and leaving day.
     		 */
-    		String[] days = {"Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"};
+    		String[] days = {"Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Vrijdag", "Zaterdag", "Zaterdag", "Zondag"};
     		int daysLength = days.length;
     		String randomArDay = days[ThreadLocalRandom.current().nextInt(0, daysLength)];
     		String randomLeDay = days[ThreadLocalRandom.current().nextInt(0, daysLength)];
@@ -501,37 +501,26 @@ public class Garage extends Model implements Runnable {
      * @param queue This param contains the queue of vehicle that are waiting.
      */
     private void carsEntering(CustomerQueue queue){
-        Random random = new Random();
-        // Remove reservation car from queue and give a space
-        for (int i=0;i<enterSpeed;i++) {
-            ReservationCar vehicle = (ReservationCar) reservationCarQueue.removeCar();
-
-            if (vehicle == null) {
-                break;
-            }
-
-            int company = vehicle.getKey();
-            ArrayList<Location> companyLocations = reservation.getCompanyLocations(company);
-
-            for (Location companyLocation : companyLocations) {
-                if(getCarAt(companyLocation) == null) {
-                    int stayMinutes = (int) (15+random.nextFloat() * 10 * 60);
-                    vehicle.setStayTime(stayMinutes);
-                    setCarAt(companyLocation, vehicle);
-                    break;
-                }
-            }
-
-
-        }
-
         int i=0;
         
         // Remove car from the front of the queue and assign to a parking space.
         while (queue.carsInQueue()>0 && getNumberOfOpenSpots()>0 && i<enterSpeed && numberOfOpenSpotsRegAndRes > 0) {
-            Vehicle vehicle = queue.removeCar();
-            Location freeLocation = getFirstFreeLocation(vehicle);
-            setCarAt(freeLocation, vehicle);
+        	Vehicle vehicle = queue.removeCar();
+        	
+        	if (vehicle instanceof ReservationCar) {
+
+            	ArrayList<Location> companyLocations = reservation.getLocation();
+
+            	for (Location companyLocation : companyLocations) {
+                	if(getCarAt(companyLocation) == null) {
+                    	setCarAt(companyLocation, vehicle);
+                    	break;
+                	}
+            	}
+        	} else {
+            	Location freeLocation = getFirstFreeLocation(vehicle);
+            	setCarAt(freeLocation, vehicle);
+        	}
             i++;
         }
     }
