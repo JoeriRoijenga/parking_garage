@@ -25,11 +25,10 @@ public class ManagementInformationView extends View {
 	 * @param queueEntranceRegularAmount This param contains the amount of regular cars in the entrance queue.
 	 * @param queueEntranceSubscriptionAmount This param contains the amount of subscription cars in the entrance queue.
 	 * @param queueExitCarAmount This param contains the amount of cars in the exit queue.
-	 * @param queueReservationAmount This param contains the amount of reservation cars in the entrance queue.
 	 * @param queuePaymentAmount This param contains the amount of cars in the payment queue.
 	 * @param regularPlacesAmount This param contains the open spots for the reservations and regular cars.
 	 */
-	private int parkingSpots, regularCars, subsciptionCar, reservationCar, queueEntranceRegularAmount, queueEntranceSubscriptionAmount, queueExitCarAmount, queueReservationAmount, queuePaymentAmount, regularPlacesAmount;
+	private int parkingSpots, regularCars, subsciptionCar, reservationCar, queueEntranceRegularAmount, queueEntranceSubscriptionAmount, queueExitCarAmount, queuePaymentAmount, regularPlacesAmount;
 	
 	/**
 	 * @param panel This param contains the panel with all the management information.
@@ -87,12 +86,6 @@ public class ManagementInformationView extends View {
 		queueEntranceSubscription.setFont(new Font(queueEntranceSubscription.getName(), Font.PLAIN, 25));
 		queueEntranceSubscription.setBorder(border);
 		
-		JLabel queueReservation = new JLabel();
-		queueReservation.setText("Queue Reservation: " + queueReservationAmount);
-		queueReservation.setPreferredSize(new Dimension(300, 40));
-		queueReservation.setFont(new Font(queueReservation.getName(), Font.PLAIN, 25));
-		queueReservation.setBorder(border);
-		
 		JLabel queuePayment = new JLabel();
 		queuePayment.setText("Queue Payment: " + queuePaymentAmount);
 		queuePayment.setPreferredSize(new Dimension(300, 40));
@@ -118,7 +111,6 @@ public class ManagementInformationView extends View {
 		panel.add(parkedReservation);		
 		panel.add(queueEntranceRegular);
 		panel.add(queueEntranceSubscription);
-		panel.add(queueReservation);
 		panel.add(queuePayment);
 		panel.add(queueExitCar);
 	
@@ -142,7 +134,6 @@ public class ManagementInformationView extends View {
 		
 		queueEntranceRegularAmount = garage.getNumberOfRegularCarsEntranceQueue();
 		queueEntranceSubscriptionAmount = garage.getNumberOfSubscriptionCarsEntranceQueue();
-		queueReservationAmount = garage.getNumberOfReserverationCarsQueue();
 		queuePaymentAmount = garage.getNumberOfPaymentQueue();
 		queueExitCarAmount = garage.getNumberOfExitCarsQueue();
 		

@@ -28,13 +28,20 @@ public class ReservationCar extends Car {
 	private String company;
 	
 	/**
+	 * This int contains the key
+	 */
+	private int key;
+	
+	/**
 	 * Constructor
 	 * 
 	 * @param company name of the company the car is part of
 	 */
-	public ReservationCar(String company, Color color) {
+	public ReservationCar(String company, Color color, int key) {
 		this.company = company;
 		this.color = color;
+		this.key = key;
+		this.setHasToPay(true);
 	}
 	
 	/**
@@ -42,8 +49,17 @@ public class ReservationCar extends Car {
 	 * 
 	 * @return name of the company
 	 */
-	String getCompany() {
+	public String getCompany() {
 		return company;
+	}
+	
+	/**
+	 * This method returns the key that is part of the reservation group this car was with.
+	 * 
+	 * @return key of the reservation
+	 */
+	public int getKey() {
+		return key;
 	}
 	
 	/**
