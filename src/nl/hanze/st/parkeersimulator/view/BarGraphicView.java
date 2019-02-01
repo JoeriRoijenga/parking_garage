@@ -66,7 +66,7 @@ public class BarGraphicView extends View {
 		
 		title = "Parked Cars";
 	    values = new double[]{garage.getNumberOfTakenSpotsByRegular(), garage.getNumberOfTakenSpotsBySubscription(), garage.getNumberOfTakenSpotsByReservation()};
-	    labels = new String[]{"Regular","Subscription", "Reservation"};
+	    labels = new String[]{"Regular " + garage.getNumberOfTakenSpotsByRegular(),"Subscription " + garage.getNumberOfTakenSpotsBySubscription(), "Reservation " + garage.getNumberOfTakenSpotsByReservation()};
 	    colors = new Color[]{	        
     		RegularCar.color,
     		SubscriptionCar.color,
