@@ -498,6 +498,7 @@ public class Garage extends Model implements Runnable {
         // Remove car from the front of the queue and assign to a parking space.
         while (queue.carsInQueue()>0 && getNumberOfOpenSpots()>0 && i<enterSpeed && numberOfOpenSpotsRegAndRes > 0) {
         	Vehicle vehicle = queue.removeCar();
+        	boolean carSet = false;
         	
         	if (vehicle instanceof ReservationCar) {
 
@@ -506,10 +507,12 @@ public class Garage extends Model implements Runnable {
             	for (Location companyLocation : companyLocations) {
                 	if(getCarAt(companyLocation) == null) {
                     	setCarAt(companyLocation, vehicle);
+                    	carSet = true;
                     	break;
                 	}
             	}
-        	} else {
+        	} 
+        	if (!carSet || vehicle instanceof RegularCar || vehicle instanceof SubscriptionCar) {
             	Location freeLocation = getFirstFreeLocation(vehicle);
             	setCarAt(freeLocation, vehicle);
         	}
