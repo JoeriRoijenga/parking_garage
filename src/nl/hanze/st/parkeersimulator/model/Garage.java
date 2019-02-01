@@ -50,6 +50,10 @@ public class Garage extends Model implements Runnable {
      */
     private int numberOfOpenSpots;
     
+    /**
+     * @param numberOfOpenSportsRegAndRes This param contains the amount of open sports for regular and reservation cars.
+     */
+    
     private int numberOfOpenSpotsRegAndRes;
     
     /**
