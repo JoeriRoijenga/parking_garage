@@ -887,7 +887,7 @@ public class Garage extends Model implements Runnable {
      * @param int fps with how much to decrease the speed.
      */
     public void setTickPause(int fps) {
-        tickPause = 1001 - fps;
+        tickPause = 1030 - fps;
     }
 
     /**

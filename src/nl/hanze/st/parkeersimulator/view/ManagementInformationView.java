@@ -99,7 +99,7 @@ public class ManagementInformationView extends View {
 		queueExitCar.setBorder(border);
 		
 		JLabel regularPlaces = new JLabel();
-		regularPlaces.setText("Regular Places: " + regularPlacesAmount);
+		regularPlaces.setText("Regular Spots: " + regularPlacesAmount);
 		regularPlaces.setPreferredSize(new Dimension(300, 40));
 		regularPlaces.setFont(new Font(regularPlaces.getName(), Font.PLAIN, 25));
 		regularPlaces.setBorder(border);

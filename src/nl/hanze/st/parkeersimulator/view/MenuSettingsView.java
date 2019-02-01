@@ -103,11 +103,14 @@ public class MenuSettingsView extends View {
 		settings.add(weekendPassArrivalsTextField);
 		
 		// Reservations car settings
-		JLabel reservetionChanceLabel = new JLabel("Reservation Chance");
+		JLabel reservetionChanceLabel = new JLabel("Reservation Chance 1 in ... Per Minute");
 		JTextField reservationChanceTextField = new JTextField("" + model.getReservationChance());
 		
 		settings.add(reservetionChanceLabel);
 		settings.add(reservationChanceTextField);
+		
+		JLabel toolTipLabel = new JLabel("* Per Hour");
+		settings.add(toolTipLabel);
 		
 		// Button save
 		JButton saveButton = new JButton("Save");

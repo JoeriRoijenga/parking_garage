@@ -43,7 +43,7 @@ public class MenuAboutView {
 		
 		JLabel textLabel = new JLabel("Groningen CityPark simulator",JLabel.CENTER);
 		textLabel.setFont(new Font("Sans", Font.PLAIN, 20));
-		JLabel versionLabel = new JLabel("Version MVC-0.1.0",JLabel.CENTER);
+		JLabel versionLabel = new JLabel("Version MVC-2.1.1",JLabel.CENTER);
 		JLabel authorLabel = new JLabel("©2018, Joeri Roijenga, Niels de Vries, Tim Perdok en Timo de Jong");
 		aboutFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowsEvent) {

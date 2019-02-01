@@ -59,7 +59,7 @@ public class SliderView extends View {
 	        
         slider.setLabelTable(labels);
         slider.setPaintLabels(true);
-        slider.setBackground(Color.YELLOW);
+        slider.setBackground(Color.LIGHT_GRAY);
 	       
 		slider.addChangeListener(changeListener);
 

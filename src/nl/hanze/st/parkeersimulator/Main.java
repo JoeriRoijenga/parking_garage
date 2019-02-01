@@ -32,7 +32,7 @@ public class Main {
 	public static void main(String[] args) {
 		JFrame window = new JFrame();
 		window.setSize(1000,1000);
-		window.setTitle("MVC Voorbeeld");
+		window.setTitle("CityPark Simulator");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Garage model = new Garage(3, 6, 30);
