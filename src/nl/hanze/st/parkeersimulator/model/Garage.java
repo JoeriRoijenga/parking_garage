@@ -1,6 +1,5 @@
 package nl.hanze.st.parkeersimulator.model;
 
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.*;
 import java.awt.*;
@@ -428,6 +427,12 @@ public class Garage extends Model implements Runnable {
             addArrivingCars(numberOfCars, SUBSCRIPTION);
     }
     
+    /*
+     * This method will create a new random reservation.
+     * 
+     * @param floors contains the number of floors.
+     * @param rows contains the number of rows.
+     */
     public void possibleReservation(int floors, int rows) {
     	Random random = new Random();
     	int reservationProbability = 1;

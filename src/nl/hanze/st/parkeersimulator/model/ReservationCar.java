@@ -53,6 +53,11 @@ public class ReservationCar extends Car {
 		return company;
 	}
 	
+	/**
+	 * This method returns the key that is part of the reservation group this car was with.
+	 * 
+	 * @return key of the reservation
+	 */
 	public int getKey() {
 		return key;
 	}

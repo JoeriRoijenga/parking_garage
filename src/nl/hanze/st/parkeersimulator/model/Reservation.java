@@ -34,16 +34,34 @@ public class Reservation {
 	 */
 	private static HashMap<Integer, Integer> amOfCars;
 	
+	/**
+	 * @param arHour This param contains the arriving hour.
+	 */
 	private static HashMap<Integer, Integer> arHour;
 	
+	/**
+	 * @param arMinute This param contains the arriving minute.
+	 */
 	private static HashMap<Integer, Integer> arMinute;
 	
+	/**
+	 * @param arDay This param contains the arriving day.
+	 */
 	private static HashMap<Integer, String> arDay;
 	
+	/**
+	 * @param leHour This param contains the leaving hour.
+	 */
 	private static HashMap<Integer, Integer> leHour;
 	
+	/**
+	 * @param leMinute This param contains the leaving minute.
+	 */
 	private static HashMap<Integer, Integer> leMinute;
 	
+	/**
+	 * @param leDay This param contains the leaving day.
+	 */
 	private static HashMap<Integer, String> leDay;
 	
 	/**
@@ -174,30 +192,72 @@ public class Reservation {
 		return colors.get(company);
 	}
 	
+	/**
+	 * This method will retrieve the company name.
+	 * 
+	 * @param company This param contains the company key.
+	 * @return String This return will return the company name.
+	 */
 	public String getCompanyName(int company) {
 		return reservations.get(company);
 	}
 
+	/**
+	 * This method will retrieve the arrival Hour.
+	 * 
+	 * @param company This param contains the company key.
+	 * @return int This return will return the arriving hour.
+	 */
 	public int getArHour(int company) {
 		return arHour.get(company);
 	}
 	
+	/**
+	 * This method will retrieve the arrival minute.
+	 * 
+	 * @param company This param contains the company key.
+	 * @return int This return will return the arriving minute.
+	 */
 	public int getArMinute(int company) {
 		return arMinute.get(company);
 	}
-	
+
+	/**
+	 * This method will retrieve the arrival day.
+	 * 
+	 * @param company This param contains the company key.
+	 * @return color This return will return the arriving day.
+	 */
 	public String getArDay(int company) {
 		return arDay.get(company);
 	}
 	
+	/**
+	 * This method will retrieve the leaving hour.
+	 * 
+	 * @param company This param contains the company key.
+	 * @return int This return will return the leaving hour.
+	 */
 	public int getLeHour(int company) {
 		return leHour.get(company);
 	}
 	
+	/**
+	 * This method will retrieve the leaving minute.
+	 * 
+	 * @param company This param contains the company key.
+	 * @return int This return will return the leaving minute.
+	 */
 	public int getLeMinute(int company) {
 		return leMinute.get(company);
 	}
 	
+	/**
+	 * This method will retrieve the leaving day.
+	 * 
+	 * @param company This param contains the company key.
+	 * @return String This return will return the leaving day.
+	 */
 	public String getLeDay(int company) {
 		return leDay.get(company);
 	}
