@@ -1,7 +1,7 @@
 package nl.hanze.st.parkeersimulator.model;
 
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.*;
 import java.awt.*;
 
@@ -147,16 +147,11 @@ public class Garage extends Model implements Runnable {
      * @param weekendPassArrivals this param contains the average number of subscription car arrivals in the weekends per hour.
      */
     int weekendPassArrivals = 25;
-
-    /**
-     * @param multiReservationChance This param contains a 1 on .. chance of getting multiple cars in a reservation.
-     */
-    int multiReservationChance = 20;
     
     /**
      * @param reservationChance This param contains a 1 on .. chance of becoming a reservation.
      */
-    int reservationChance = 12; // x in 1 change a reservation
+    int reservationChance = 400; // x in 1 change a reservation
     
     /**
      * @param maxReservationSpots The param contains the maximum of reserved places for the reservation cars.
@@ -199,6 +194,16 @@ public class Garage extends Model implements Runnable {
     int defaultQueueSize = 10;
     
     /**
+     * @param maxAmountOfReservationCars This param constains the max amount of cars that one reservation can have.
+     */
+    int maxAmountOfReservationCars = 5;
+    
+    /**
+     * @param reservationKey This param is the key that will be changed and added to make a reservation unique.
+     */
+    int reservationKey = 0;
+    
+    /**
      * Constructor
      *
      * @param numberOfFloors This param contains the number of floors.
@@ -227,18 +232,7 @@ public class Garage extends Model implements Runnable {
          * Can be filled with companies
          */
         this.reservation = new Reservation();
-
-        ArrayList<Location> locations = new ArrayList<>();
-        locations = getReservationSpots(locations, numberOfFloors, numberOfRows, this.maxReservationSpots);
-
-        reservation.makeReservation(locations, "Shell inc", 3);
-        reservation.setColor("Shell inc", Color.GREEN);
-
-        reservation.makeReservation(locations, "Hope for paws", 1);
-        reservation.setColor("Hope for paws", Color.YELLOW);
-
-        reservation.makeReservation(locations, "KPN", 10);
-        reservation.setColor("KPN", Color.GREEN);
+        
     }
     
     /**
@@ -401,37 +395,99 @@ public class Garage extends Model implements Runnable {
      * This method will check if there are any cars arriving.
      */
     private void carsArriving(){
-        Random random = new Random();
-        int amount = 1;
-        int reservationProbability = 1;
-        int multiReservationProbability = 1;
-
-        if (reservationChance != 0) {
-            reservationProbability = random.nextInt(this.reservationChance);
-        }
-
-        if (reservationProbability == 0) {
-            List<String> keys = new ArrayList<String>(reservation.getReservation().keySet());
-            String randomCompany = keys.get(random.nextInt(reservation.getReservation().size()));
-
-            if (multiReservationChance != 0 ) {
-                multiReservationProbability = random.nextInt(this.multiReservationChance);
+    		possibleReservation(numberOfFloors, numberOfRows);
+            
+            HashMap<Integer, String> reservations = reservation.getReservations();
+             
+            for (Integer key : reservations.keySet()) {
+            	String day = getDay();      
+            	int arrivalMinute = reservation.getArMinute(key);
+            	int arrivalHour = reservation.getArHour(key);
+            	
+            	if (arrivalMinute < 15) {
+            		int i = 15 - arrivalMinute;
+            		arrivalMinute = 60 - i;
+            		arrivalHour -= 1;
+            	} else {
+            		arrivalMinute -= 15;
+            	}
+            	
+            	if (day.equals(reservation.getArDay(key)) && 
+            			minute == arrivalMinute && 
+            			hour == arrivalHour)
+            	{
+            		for (int i = 0; i<reservation.getAmountOfCars(key); i++) {          			
+            			reservationCarQueue.addCar(new ReservationCar(reservation.getCompanyName(key), reservation.getColor(key), key));
+            		}
+            	}
             }
 
-            if (multiReservationProbability == 0) {
-                amount = reservation.getAmountOfCars();
-            }
-
-            for (int i=0; i<amount; i++) {
-                reservationCarQueue.addCar(new ReservationCar(randomCompany, reservation.getColor(randomCompany)));
-            }
-
-        } else {
             int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
             addArrivingCars(numberOfCars, REGULAR);
             numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
             addArrivingCars(numberOfCars, SUBSCRIPTION);
-        }
+    }
+    
+    public void possibleReservation(int floors, int rows) {
+    	Random random = new Random();
+    	int reservationProbability = 1;
+
+    	if (reservationChance != 0) {
+    		reservationProbability = random.nextInt(reservationChance);
+    	}
+
+    	if (reservationProbability == 0) {
+    		ArrayList<Location> locations = new ArrayList<>();
+    		locations = getReservationSpots(locations, floors, rows, this.maxReservationSpots);
+    		
+    		/**
+    		 * Get a random company name.
+    		 */
+    		String[] companies = {"Shell inc", "KPN", "YoungCapital", "Plus Supermarkt"};
+    		int companiesLength = companies.length;
+    		String randomComp = companies[ThreadLocalRandom.current().nextInt(0, companiesLength)];
+    		
+    		/**
+    		 * Get a random arriving and leaving day.
+    		 */
+    		String[] days = {"Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"};
+    		int daysLength = days.length;
+    		String randomArDay = days[ThreadLocalRandom.current().nextInt(0, daysLength)];
+    		String randomLeDay = days[ThreadLocalRandom.current().nextInt(0, daysLength)];
+    		
+    		/**
+    		 * Get a random arriving and leaving hour.
+    		 */
+    		int randomArHour = ThreadLocalRandom.current().nextInt(0, 24);
+    		int randomLeHour = ThreadLocalRandom.current().nextInt(0, 24);
+    		
+    		/**
+    		 * Get a random arriving and leaving minute.
+    		 */
+    		int randomArMinute = ThreadLocalRandom.current().nextInt(0, 60);
+    		int randomLeMinute = ThreadLocalRandom.current().nextInt(0, 60);
+    		
+    		/**
+    		 * Get a random amount of cars between 1 and 10
+    		 */
+    		int carAmount = ThreadLocalRandom.current().nextInt(1, maxAmountOfReservationCars + 1);
+    		
+    		/**
+    		 * Get a random color
+    		 */
+    		float r = random.nextFloat();
+    		float g = random.nextFloat();
+    		float b = random.nextFloat();
+    		
+    		Color color = new Color(r, g, b);
+    		     
+    		/**
+    		 * Make a reservation.
+    		 */
+    		reservation.makeReservation(reservationKey, locations, randomComp, carAmount, randomArDay, randomArHour, randomArMinute, randomLeDay, randomLeHour, randomLeMinute);
+    		reservation.setColor(reservationKey, color);
+    		reservationKey+=1;
+    	}
     }
 
     /**
@@ -449,7 +505,7 @@ public class Garage extends Model implements Runnable {
                 break;
             }
 
-            String company = vehicle.getCompany();
+            int company = vehicle.getKey();
             ArrayList<Location> companyLocations = reservation.getCompanyLocations(company);
 
             for (Location companyLocation : companyLocations) {
@@ -513,7 +569,14 @@ public class Garage extends Model implements Runnable {
         // Let cars leave.
         int i=0;
         while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
-            exitCarQueue.removeCar();
+            Vehicle vehicle = exitCarQueue.removeCar();
+            
+            if (vehicle instanceof ReservationCar) {
+            	int key = ((ReservationCar) vehicle).getKey();
+            	
+            	reservation.removeReservation(key);
+            }
+            
             i++;
         }
     }
@@ -672,8 +735,23 @@ public class Garage extends Model implements Runnable {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
                     Location location = new Location(floor, row, place);
                     Vehicle vehicle = getCarAt(location);
-                    if (vehicle != null && vehicle.getMinutesLeft() <= 0 && !vehicle.getIsPaying()) {
-                        return vehicle;
+                    
+                    if (vehicle != null && !vehicle.getIsPaying()) {
+                    	if (vehicle instanceof ReservationCar) {
+                    		int company = ((ReservationCar) vehicle).getKey();                    	
+                    	
+                        	if (getDay().equals(reservation.getLeDay(company)) && 
+                        		minute == reservation.getLeMinute(company) && 
+                        		hour == reservation.getLeHour(company)) 
+                        	{
+                        		return vehicle;
+                        	}
+                    	} else {
+                    
+                    		if (vehicle.getMinutesLeft() <= 0) {
+                        		return vehicle;
+                    		}
+                    	}
                     }
                 }
             }
